@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 능력 진단</title>
+    <style>
+        /* Pretendard 폰트 불러오기 (없으면 애플 산돌고딕 사용) */
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; color: #333;
+            overflow-x: hidden;
+
+            /* [배경 이미지 설정] 직접 그린 배경 이미지를 여기에 넣으세요 */
+            /* 배경 이미지 파일명을 'my_background.jpg'로 변경하거나 아래 파일명을 수정하세요 */
+            background-image: url('my_background.jpg');
+            background-size: cover;       /* 화면에 가득 차게 */
+            background-position: center;  /* 중앙 정렬 */
+            background-repeat: no-repeat; /* 반복 없음 */
+            background-attachment: fixed; /* 스크롤 시 배경 고정 */
+        }
+
+        /* 메인 카드 (Glassmorphism 효과 - 배경이 살짝 비침) */
+        .card {
+            width: 90%; max-width: 450px;
+            padding: 50px 20px; text-align: center; position: relative;
+            background: rgba(255, 255, 255, 0.9); /* 반투명 흰색 */
+            backdrop-filter: blur(5px);           /* 배경 흐림 효과 */
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: fadeIn 0.6s ease;
+        }
+
+        .hidden { display: none; }
+
+        /* 캐릭터 애니메이션 및 스타일 */
+        .char-container { width: 180px; margin: 0 auto 20px; animation: floating 3s ease-in-out infinite; }
+        .char-container img { width: 100%; height: auto; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.05)); }
+
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 말풍선 기본 스타일 */
+        .bubble {
+            background: #f9f9f9; padding: 24px; border-radius: 20px; margin-bottom: 30px;
+            font-size: 1.1rem; line-height: 1.6; font-weight: 600; color: #222;
+            position: relative; border: 1px solid #eee;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+        /* 말풍선 꼬리 (위쪽 방향) */
+        .bubble::after {
+            content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            border-width: 0 10px 10px; border-style: solid; border-color: transparent transparent #f9f9f9;
+        }
+
+        /* 퀴즈 페이지 질문 번호 스타일 */
+        #question-number {
+            font-size: 1rem; font-weight: 800; color: #6C63FF; margin-bottom: 5px;
+        }
+
+        /* 버튼 스타일 */
+        .btn {
+            display: block; width: 100%; padding: 18px; margin: 12px 0;
+            border: 1px solid #e0e0e0; border-radius: 12px; background: #ffffff;
+            font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; color: #444;
+        }
+        .btn:hover { background: #333; color: #fff; border-color: #333; transform: scale(1.02); }
+        .primary-btn { background: #333; color: #fff; border: none; font-weight: 700; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .primary-btn:hover { background: #000; }
+
+        /* 결과 페이지 - 순위별 테두리 및 그림자 (색상 추가) */
+        .rank-container { display: flex; justify-content: space-around; align-items: flex-end; margin: 35px 0 25px; }
+        .rank-box { text-align: center; width: 30%; border-radius: 15px; padding: 15px 5px; background: #fff; border: 2px solid transparent; transition: all 0.3s ease; }
+        .rank-badge { display: block; font-size: 0.85rem; font-weight: 800; margin-bottom: 5px; }
+        .rank-name { font-weight: 900; font-size: 1.2rem; }
+
+        /* [색상 설정] 1위: 보라/금색 */
+        .rank-1 {
+            transform: scale(1.15); /* 1위 강조 */
+            border-color: #FFD700; /* 금색 테두리 */
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.2); /* 보라색 그림자 */
+            color: #6C63FF;
+        }
+        .rank-1 .rank-badge { color: #856404; } /* 진한 금색 뱃지 텍스트 */
+
+        /* [색상 설정] 2위: 파랑/은색 */
+        .rank-2 {
+            border-color: #C0C0C0; /* 은색 테두리 */
+            box-shadow: 0 5px 15px rgba(0, 112, 243, 0.1); /* 파란색 그림자 */
+            color: #0070F3;
+        }
+        .rank-2 .rank-badge { color: #666; }
+
+        /* [색상 설정] 3위: 초록/동색 */
+        .rank-3 {
+            border-color: #CD7F32; /* 동색 테두리 */
+            box-shadow: 0 5px 15px rgba(0, 213, 171, 0.1); /* 초록색 그림자 */
+            color: #23D5AB;
+        }
+        .rank-3 .rank-badge { color: #8B4513; }
+
+        /* 결과 설명 리스트 스타일 */
+        .desc-list { text-align: left; margin-top: 30px; background: #fdfdfd; padding: 25px; border-radius: 20px; border: 1px solid #eee; }
+        .desc-item { margin-bottom: 18px; font-size: 1rem; line-height: 1.6; color: #555; }
+        .desc-item b { font-weight: 700; color: #333; font-size: 1.05rem; display: block; margin-bottom: 3px; }
+
+        /* 순위별 설명 텍스트 색상 포인트 */
+        .desc-item:nth-child(1) b { color: #6C63FF; } /* 1위 설명 제목색 */
+        .desc-item:nth-child(2) b { color: #0070F3; } /* 2위 설명 제목색 */
+        .desc-item:nth-child(3) b { color: #23D5AB; } /* 3위 설명 제목색 */
+    </style>
+</head>
+<body>
+
+    <div id="start-page" class="card">
+        <div class="char-container">
+            <img src="char_main.png" alt="내 캐릭터">
+        </div>
+        <div class="bubble">안녕! 너의 숨겨진 능력을<br>내가 찾아줄게. 같이 가볼래?</div>
+        <button class="btn primary-btn" onclick="showPage('story-page')">시작하기</button>
+    </div>
+
+    <div id="story-page" class="card hidden">
+        <div class="char-container">
+            <img src="char_story.png" alt="캐릭터">
+        </div>
+        <div class="bubble">당신은 지금 막<br>새로운 모험을 앞두고 있어요.<br>준비가 되었나요?</div>
+        <button class="btn primary-btn" onclick="startQuiz()">좋아, 가보자!</button>
+    </div>
+
+    <div id="quiz-page" class="card hidden">
+        <div class="char-container">
+            <img src="char_quiz.png" alt="캐릭터"> </div>
+        <div id="question-number">Q1 / 10</div>
+        <div class="bubble" id="question-text">질문 내용</div>
+
+        <div id="options"></div>
+        <button id="prev-btn" style="background:none; border:none; color:#bbb; text-decoration:underline; cursor:pointer; margin-top:20px; font-size: 0.9rem;" onclick="goBack()">이전 질문으로</button>
+    </div>
+
+    <div id="result-page" class="card hidden">
+        <div class="char-container">
+            <img src="result_character.png" alt="결과">
+        </div>
+        <h2 style="margin-bottom: 5px; font-weight: 900;">진단 결과</h2>
+        <p style="color: #777; margin: 0 0 25px; font-size: 0.9rem;">나의 강점 역량 Top 3</p>
+
+        <div class="rank-container" id="rank-display"></div>
+
+        <div class="desc-list" id="desc-list"></div>
+
+        <button class="btn primary-btn" style="margin-top:30px; font-size: 1.1rem; padding: 20px;" onclick="location.reload()">테스트 다시하기</button>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "주말에 에너지를 얻는 방법은?", a: "친구와 수다", t1: "소통", b: "게임 공략/퍼즐", t2: "분석", c: "풍경 사진/식물 돌보기", t3: "자연" },
+            { q: "무인도에 떨어졌을 때 당신은?", a: "집과 도구 제작", t1: "실무", b: "탈출 계획 수립", t2: "분석", c: "모래 위 SOS 창작", t3: "창의" },
+            { q: "학교 축제에서 맡고 싶은 역할은?", a: "무대 MC/발표", t1: "소통", b: "포스터/무대 디자인", t2: "창의", c: "요리/부스 운영", t3: "실무" },
+            { q: "새로운 앱을 만든다면 어떤 기능?", a: "커뮤니티/채팅 기능", t1: "소통", b: "데이터/알고리즘", t2: "분석", c: "세련된 UI 디자인", t3: "창의" },
+            { q: "희귀한 꽃을 발견했다면?", a: "특징/이름 검색", t1: "분석", b: "세밀화 그리기", t2: "창의", c: "주변 잡초 정리", t3: "자연" },
+            { q: "친구와 화해하는 방식은?", a: "진심 어린 대화/편지", t1: "소통", b: "원인 논리적 분석", t2: "분석", c: "직접 만든 선물 전달", t3: "실무" },
+            { q: "영화 속 끌리는 캐릭터는?", a: "사람을 이끄는 리더", t1: "소통", b: "사건 푸는 탐정", t2: "분석", c: "강인한 전사/메이커", t3: "실무" },
+            { q: "카페를 차린다면 어떤 카페?", a: "북토크/강연 카페", t1: "소통", b: "실험적 갤러리 카페", t2: "창의", c: "온실/가드닝 카페", t3: "자연" },
+            { q: "나만의 공부 비법은?", a: "소리 내어 읽기/설명", t1: "소통", b: "마인드맵/도표 요약", t2: "분석", c: "문제 직접 많이 풀기", t3: "실무" },
+            { q: "미래에 듣고 싶은 칭찬은?", a: "따뜻한 소통가네요", t1: "소통", b: "예리한 전략가네요", t2: "분석", c: "놀라운 창작자네요", t3: "창의" }
+        ];
+
+        let currentIdx = 0;
+        let scores = { "소통": 0, "분석": 0, "자연": 0, "실무": 0, "창의": 0 };
+        let choiceHistory = [];
+
+        function showPage(id) {
+            document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function startQuiz() {
+            showPage('quiz-page');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentIdx];
+            document.getElementById('question-number').innerText = `Q${currentIdx + 1} / ${questions.length}`;
+            document.getElementById('question-text').innerText = q.q;
+            
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = `
+                <button class="btn" onclick="selectOption('${q.t1}')">${q.a}</button>
+                <button class="btn" onclick="selectOption('${q.t2}')">${q.b}</button>
+                <button class="btn" onclick="selectOption('${q.t3}')">${q.c}</button>
+            `;
+            document.getElementById('prev-btn').style.display = currentIdx > 0 ? 'inline-block' : 'none';
+        }
+
+        function selectOption(type) {
+            choiceHistory.push(type);
+            scores[type]++;
+            currentIdx++;
+            if (currentIdx < questions.length) showQuestion();
+            else showResult();
+        }
+
+        function goBack() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                scores[choiceHistory.pop()]--;
+                showQuestion();
+            }
+        }
+
+        function showResult() {
+            showPage('result-page');
+            const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+            
+            const rankDisplay = document.getElementById('rank-display');
+            // 자바스크립트로 HTML 구조를 만들면서 순위별 CSS 클래스(rank-1, rank-2, rank-3)를 부여합니다.
+            rankDisplay.innerHTML = `
+                <div class="rank-box rank-2"><span class="rank-badge">2위</span><span class="rank-name">${sorted[1][0]}</span></div>
+                <div class="rank-box rank-1"><span class="rank-badge">1위</span><span class="rank-name">${sorted[0][0]}</span></div>
+                <div class="rank-box rank-3"><span class="rank-badge">3위</span><span class="rank-name">${sorted[2][0]}</span></div>
+            `;
+
+            const descList = document.getElementById('desc-list');
+            descList.innerHTML = sorted.slice(0, 3).map((item, index) => `
+                <div class="desc-item">
+                    <b>${index + 1}위 ${item[0]} 역량:</b> ${getDescription(item[0])}
+                </div>
+            `).join('');
+        }
+
+        function getDescription(type) {
+            const desc = {
+                "소통": "사람들의 마음을 움직이고 조화를 이루는 능력이 탁월합니다.",
+                "분석": "논리적 사고로 복잡한 상황의 본질을 꿰뚫어 봅니다.",
+                "실무": "풍부한 실천력으로 생각한 것을 현실로 만들어냅니다.",
+                "창의": "남들이 보지 못하는 새로운 가치를 발견하고 표현합니다.",
+                "자연": "환경을 관찰하고 생명과 교감하는 섬세한 통찰이 있습니다."
+            };
+            return desc[type];
+        }
+    </script>
+</body>
+</html>
