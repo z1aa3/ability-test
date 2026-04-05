@@ -6,6 +6,7 @@
     <title>Student Ability Assessment</title>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 
         body {
             margin: 0; padding: 0;
@@ -20,29 +21,38 @@
             overflow-x: hidden;
         }
 
-        /* 인트로 사진 스타일 - 투명 배경 및 선명도 유지 */
+        /* [수정] 인트로 지도 위치만 더 위로 (top: 25%) */
         #intro-image {
             position: fixed;
-            top: 40%; left: 50%;
+            top: 25%; /* 기존 30%에서 더 위로 올림 */
+            left: 50%;
             transform: translate(-50%, -50%);
-            width: 320px;
+            width: 440px;
             height: auto;
-            z-index: 100;
+            z-index: 5;
             transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             background: transparent;
             box-shadow: none;
             border: none;
-            opacity: 1; /* 항상 선명하게 */
+            opacity: 1;
         }
 
-        /* [수정] 이동 후 위치를 더 위쪽(top: 20px)으로 조정 */
+        /* 이동 후 위치 (오른쪽 상단 고정) */
         #intro-image.moved {
-            top: 20px; /* 더 위로 배치 */
-            left: calc(100% - 60px); /* 오른쪽 거리는 유지 */
+            top: 20px;
+            left: calc(100% - 60px);
             transform: translate(-100%, 0);
-            width: 250px; /* 크기 유지 */
-            opacity: 1;   /* 사진 그대로 유지 */
+            width: 250px;
+            z-index: 100;
+        }
+
+        #intro-page {
+            background: transparent;
             box-shadow: none;
+            border: none;
+            backdrop-filter: none;
+            width: 90%;
+            max-width: 800px;
         }
 
         .card {
@@ -59,6 +69,27 @@
 
         .hidden { display: none; }
 
+        /* [수정] 타이틀 여백 조정 (지도가 올라간 만큼 위로) */
+        .intro-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            margin-top: 240px; /* 기존 280px에서 줄여서 더 위로 */
+            color: #2c3e50;
+            text-shadow: 0 2px 15px rgba(255,255,255,0.9);
+        }
+
+        .intro-desc {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            color: #333;
+            word-break: keep-all;
+            text-shadow: 0 2px 10px rgba(255,255,255,0.8);
+        }
+
         .char-container { width: 150px; margin: 0 auto 20px; animation: floating 3s ease-in-out infinite; }
         .char-container img { width: 100%; height: auto; }
 
@@ -73,32 +104,23 @@
             content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
             border-width: 0 12px 12px; border-style: solid; border-color: transparent transparent #333;
         }
-        .bubble::before {
-            content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
-            border-width: 0 10px 10px; border-style: solid; border-color: transparent transparent #f9f9f9;
-            z-index: 1;
-        }
 
         .btn {
-            display: block; width: 100%; padding: 16px; margin: 10px 0;
-            border: 1px solid #e0e0e0; border-radius: 12px; background: #ffffff;
-            font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: 0.2s; color: #444;
+            display: block; width: 100%; padding: 20px; margin: 10px 0;
+            border: 1px solid #e0e0e0; border-radius: 15px; background: #ffffff;
+            font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.2s; color: #444;
         }
-        .btn:hover { background: #333; color: #fff; border-color: #333; }
-        .primary-btn { background: #333; color: #fff; border: none; font-weight: 700; }
+        .btn:hover { background: #333; color: #fff; border-color: #333; transform: translateY(-2px); }
+        .primary-btn { background: #333; color: #fff; border: none; font-weight: 700; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
         .heart-gauge { display: flex; justify-content: center; gap: 5px; margin: 20px 0 10px; font-size: 1.2rem; color: #ddd; }
         .heart.fill { color: #e74c3c; animation: heartBeat 0.3s ease; }
-        @keyframes heartBeat { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
-
+        
         .rank-container { display: flex; justify-content: space-between; align-items: flex-end; margin: 30px 0; gap: 8px; }
         .rank-box { flex: 1; text-align: center; border-radius: 15px; padding: 12px 5px; background: #fff; border: 2px solid transparent; }
-        .rank-badge { display: block; font-size: 0.7rem; font-weight: 800; margin-bottom: 4px; }
-        .rank-name { font-weight: 900; font-size: 0.9rem; word-wrap: break-word; line-height: 1.2; display: block; }
+        .rank-name { font-weight: 900; font-size: 0.9rem; word-wrap: break-word; display: block; }
         .rank-1 { transform: scale(1.1); border-color: #FFD700; color: #6C63FF; padding: 18px 5px; }
-        .rank-2 { border-color: #C0C0C0; color: #0070F3; }
-        .rank-3 { border-color: #CD7F32; color: #23D5AB; }
-
+        
         .desc-list { text-align: left; margin-top: 25px; background: #fdfdfd; padding: 20px; border-radius: 20px; border: 1px solid #eee; }
         .desc-item { margin-bottom: 15px; font-size: 0.85rem; line-height: 1.5; color: #555; }
         .desc-item b { font-weight: 700; color: #333; display: block; margin-bottom: 2px; }
@@ -109,12 +131,12 @@
     <img src="jido.png" id="intro-image" alt="Intro Photo">
 
     <div id="intro-page" class="card">
-        <h2 style="margin-top: 160px; font-weight: 900;">Welcome!</h2>
-        <p style="color: #666; line-height: 1.6; margin-bottom: 30px;">
+        <h2 class="intro-title">Welcome!</h2>
+        <p class="intro-desc">
             This is a space to discover your unique talents.<br>
             Are you ready to find your true potential?
         </p>
-        <button class="btn primary-btn" onclick="goToStart()">Start Journey</button>
+        <button class="btn primary-btn" style="max-width: 300px; margin: 0 auto; font-size: 1.3rem;" onclick="goToStart()">Start Journey</button>
     </div>
 
     <div id="start-page" class="card hidden">
