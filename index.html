@@ -3,226 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Student Ability Assessment</title>
+    <title>Adventure Ability Assessment</title>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 
-        /* 아이패드/모바일 배경 잘림 방지 설정 */
         html, body {
-            margin: 0; padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden; /* 인트로에서 스크롤 방지 */
+            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
         }
 
         body {
             font-family: 'Pretendard', -apple-system, sans-serif;
             display: flex; justify-content: center; align-items: center;
-            min-height: 100dvh; /* 최신 모바일 브라우저 높이 대응 */
-            color: #333;
-            background-image: url('samak.png');
+            min-height: 100dvh; color: #333;
             background-size: cover;
-            background-position: center center;
+            background-position: center;
             background-repeat: no-repeat;
-            background-attachment: scroll; /* 모바일 성능 및 고정을 위해 변경 */
+            transition: background-image 1s ease-in-out;
             position: relative;
         }
 
-        /* 배경 보정용 가상 요소 (아이패드에서 배경이 밀리는 현상 방지) */
+        /* 배경 고정용 */
         body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: inherit;
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: inherit; background-size: cover; background-position: center; z-index: -1;
         }
 
-        /* 인트로 지도 */
+        /* 인트로 지도 위치 및 크기 */
         #intro-image {
             position: fixed;
-            top: 25%; 
+            top: 22%; /* 위로 살짝 올림 */
             left: 50%;
             transform: translate(-50%, -50%);
             width: 440px;
-            max-width: 80vw; /* 모바일/아이패드에서 너무 크지 않게 */
+            max-width: 85vw;
             height: auto;
             z-index: 5;
             transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             pointer-events: none;
         }
 
-        /* 이동 후 위치 */
+        /* [수정] 이동 후 우측 상단 - 사이즈를 크게 유지 (320px) */
         #intro-image.moved {
-            top: 20px;
-            left: calc(100% - 30px); /* 패딩 조정 */
+            top: 60px;
+            left: calc(100% - 40px);
             transform: translate(-100%, 0);
-            width: 180px; /* 이동 후 크기 살짝 줄임 */
+            width: 320px; 
             z-index: 100;
+            opacity: 0.9;
         }
 
-        /* 인트로 페이지 컨테이너 */
+        /* 인트로 텍스트 레이아웃 - 아래로 내림 */
         #intro-page {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100dvh;
+            top: 0; left: 0; width: 100%; height: 100dvh;
             display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
+            justify-content: flex-end; /* 아래쪽 정렬 */
+            align-items: center;
+            padding-bottom: 80px; /* 바닥에서 띄움 */
             background: transparent;
             z-index: 10;
         }
 
         .card {
-            width: 90%; max-width: 450px;
-            padding: 40px 15px; text-align: center; position: relative;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(8px);
+            width: 92%; max-width: 480px;
+            padding: 35px 20px; text-align: center; position: relative;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
             box-sizing: border-box;
             z-index: 20;
         }
 
         .hidden { display: none !important; }
 
-        /* 타이틀 및 설명 */
         .intro-title {
             font-family: 'Dancing Script', cursive;
-            font-size: 4.5rem; /* 조금 더 최적화 */
-            font-weight: 700;
+            font-size: 5.2rem;
             margin: 0;
-            margin-top: 150px;
             color: #2c3e50;
-            text-shadow: 0 2px 15px rgba(255,255,255,0.9);
+            text-shadow: 0 2px 15px rgba(255,255,255,1);
         }
 
         .intro-desc {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 800;
-            line-height: 1.4;
-            margin: 20px 0 40px 0;
-            color: #333;
-            text-align: center;
-            word-break: keep-all;
+            line-height: 1.3;
+            margin: 15px 0 35px 0;
+            color: #444;
             text-shadow: 0 2px 10px rgba(255,255,255,0.8);
         }
 
         .start-btn {
-            max-width: 300px;
-            width: 80%;
-            padding: 20px;
-            border: none;
-            border-radius: 15px;
-            background: #333;
-            color: #fff;
-            font-size: 1.3rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            width: 280px; padding: 22px; border: none; border-radius: 20px;
+            background: #333; color: #fff; font-size: 1.4rem; font-weight: 700;
+            cursor: pointer; transition: 0.3s;
         }
+        .start-btn:hover { transform: scale(1.05); background: #000; }
 
-        /* 기타 캐릭터 및 버튼 스타일 유지 */
-        .char-container { width: 140px; margin: 0 auto 20px; animation: floating 3s ease-in-out infinite; }
-        .char-container img { width: 100%; height: auto; }
+        /* 캐릭터 및 말풍선 */
+        .char-container { width: 140px; margin: 0 auto 15px; animation: floating 3s ease-in-out infinite; }
+        .char-container img { width: 100%; }
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         .bubble {
-            background: #f9f9f9; padding: 20px; border-radius: 20px; margin-bottom: 25px;
-            font-size: 1rem; line-height: 1.5; font-weight: 600; color: #222;
-            position: relative; border: 2px solid #333;
+            background: #fdfdfd; padding: 20px; border-radius: 20px; margin-bottom: 20px;
+            font-size: 1.1rem; line-height: 1.5; font-weight: 700; border: 2.5px solid #333;
+            word-break: keep-all;
         }
+
         .btn {
-            display: block; width: 100%; padding: 18px; margin: 10px 0;
-            border: 1px solid #e0e0e0; border-radius: 12px; background: #ffffff;
+            display: block; width: 100%; padding: 16px; margin: 8px 0;
+            border: 1px solid #ddd; border-radius: 12px; background: #fff;
             font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s;
+            text-align: left;
         }
-        .heart-gauge { display: flex; justify-content: center; gap: 5px; margin: 15px 0; font-size: 1.2rem; color: #ddd; }
-        .heart.fill { color: #e74c3c; }
+        .btn:hover { background: #333; color: #fff; }
+
+        /* 하트 게이지 */
+        .heart-gauge { display: flex; justify-content: center; gap: 4px; margin: 15px 0; font-size: 1.3rem; color: #eee; }
+        .heart.fill { color: #e74c3c; transition: color 0.3s; }
+        
+        .stage-indicator {
+            font-weight: 900; color: #666; font-size: 0.9rem; margin-bottom: 5px; text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
 
-    <img src="jido.png" id="intro-image" alt="Intro Photo">
+    <img src="jido.png" id="intro-image" alt="Intro Map">
 
     <div id="intro-page">
         <h2 class="intro-title">Welcome!</h2>
         <p class="intro-desc">
-            This is a space to discover your unique talents.<br>
-            Are you ready to find your true potential?
+            Discover your unique talents.<br>
+            Ready for the journey?
         </p>
         <button class="start-btn" onclick="goToStart()">Start Journey</button>
     </div>
 
-    <div id="start-page" class="card hidden">
-        <div class="char-container"><img src="cha.png" alt="Character"></div>
-        <div class="bubble">Hi! I'll help you find<br>your hidden abilities.</div>
-        <button class="btn" style="background:#333; color:#fff;" onclick="showPage('story-page')">Next</button>
-    </div>
-
-    <div id="story-page" class="card hidden">
-        <div class="char-container"><img src="cha.png" alt="Character"></div>
-        <div class="bubble">Imagine you are about to<br>start a new adventure.</div>
-        <button class="btn" style="background:#333; color:#fff;" onclick="startQuiz()">Yes, Let's go!</button>
-    </div>
-
     <div id="quiz-page" class="card hidden">
-        <div class="char-container"><img src="char_quiz.png" alt="Character"></div>
+        <div class="stage-indicator" id="stage-text">Stage 1: Deserted Island</div>
+        <div class="char-container"><img src="cha.png" id="quiz-char" alt="Character"></div>
         <div class="bubble" id="question-text">Loading...</div>
         <div id="options-container"></div>
         <div class="heart-gauge" id="heart-gauge"></div>
-        <button id="prev-btn" style="background:none; border:none; color:#bbb; text-decoration:underline; cursor:pointer; margin-top:10px;" onclick="goBack()">Back</button>
+        <button id="prev-btn" style="background:none; border:none; color:#999; text-decoration:underline; cursor:pointer; margin-top:10px; font-weight:700;" onclick="goBack()">← Back</button>
     </div>
 
     <div id="result-page" class="card hidden">
-        <div class="char-container"><img src="result_character.png" alt="Character"></div>
-        <h2 style="font-weight: 900;">Assessment Result</h2>
-        <div id="rank-display" style="display:flex; gap:10px; margin:20px 0;"></div>
-        <div id="desc-list" style="text-align:left; font-size:0.9rem; background:#f9f9f9; padding:15px; border-radius:15px;"></div>
-        <button class="btn" style="margin-top:20px; background:#333; color:#fff;" onclick="location.reload()">Retake</button>
+        <h2 style="font-weight: 900;">Your Adventure Result</h2>
+        <div id="rank-display" style="margin:20px 0;"></div>
+        <div id="desc-list" style="text-align:left; background:#f9f9f9; padding:20px; border-radius:20px;"></div>
+        <button class="start-btn" style="margin-top:20px; width:100%;" onclick="location.reload()">Restart Adventure</button>
     </div>
 
     <script>
-        function goToStart() {
-            const img = document.getElementById('intro-image');
-            img.classList.add('moved');
-            document.getElementById('intro-page').classList.add('hidden');
-            showPage('start-page');
-            document.body.style.overflow = 'auto';
-        }
+        const backgrounds = {
+            stage1: "url('samak.png')", 
+            stage2: "url('desert_bg.png')",
+            stage3: "url('jungle_bg.png')"
+        };
 
-        function showPage(id) {
-            document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
-            const target = document.getElementById(id);
-            if(target) target.classList.remove('hidden');
-        }
+        // 초기 배경 설정
+        document.body.style.backgroundImage = backgrounds.stage1;
 
-        // 퀴즈 로직 (질문 생략 - 기존과 동일하게 유지)
         const questions = [
-            { q: "How do you gain energy on weekends?", options: [ {text: "Chatting with friends", type: "Communication"}, {text: "Solving puzzles", type: "Analysis"}, {text: "Gardening", type: "Nature"} ] },
-            { q: "If you were stuck on a desert island?", options: [ {text: "Build a house", type: "Practicality"}, {text: "Make an escape plan", type: "Analysis"}, {text: "Create an SOS sign", type: "Creativity"} ] },
-            { q: "Role in a school festival?", options: [ {text: "MC/Presenter", type: "Communication"}, {text: "Designer", type: "Creativity"}, {text: "Food booth", type: "Practicality"} ] },
-            { q: "If you were to create an app?", options: [ {text: "Chatting app", type: "Communication"}, {text: "Data/Algorithms", type: "Analysis"}, {text: "Beautiful Design", type: "Creativity"} ] },
-            { q: "Found a rare flower?", options: [ {text: "Search for its name", type: "Analysis"}, {text: "Draw it in detail", type: "Creativity"}, {text: "Clear away weeds", type: "Nature"} ] },
-            { q: "How do you make up with a friend?", options: [ {text: "Heartfelt conversation", type: "Communication"}, {text: "Analyze the cause", type: "Analysis"}, {text: "Give a handmade gift", type: "Practicality"} ] },
-            { q: "Favorite movie character type?", options: [ {text: "Inspirational leader", type: "Communication"}, {text: "Smart detective", type: "Analysis"}, {text: "Strong maker", type: "Practicality"} ] },
-            { q: "What kind of cafe would you open?", options: [ {text: "Lecture cafe", type: "Communication"}, {text: "Gallery cafe", type: "Creativity"}, {text: "Garden cafe", type: "Nature"} ] },
-            { q: "Your secret study method?", options: [ {text: "Explaining out loud", type: "Communication"}, {text: "Making mindmaps", type: "Analysis"}, {text: "Solving problems", type: "Practicality"} ] },
-            { q: "Compliment you want to hear?", options: [ {text: "Great listener", type: "Communication"}, {text: "Sharp strategist", type: "Analysis"}, {text: "Amazing creator", type: "Creativity"} ] }
+            // Stage 1: Island (1-7)
+            { stage: 1, q: "Hey, look! We finally woke up on this beach. What should we do first?", options: [{text: "Let's shout for help and look for people!", type: "Leader"}, {text: "I'll scout the area for animal tracks or fruit.", type: "Guardian"}, {text: "I'll find a sharp stone to make a tool.", type: "Maker"}]},
+            { stage: 1, q: "I'm so thirsty... My throat is burning. How are we going to get some water?", options: [{text: "I'll build a system to catch rain water.", type: "Strategist"}, {text: "I’ll climb that tall tree to get some coconuts!", type: "Athlete"}, {text: "I think water is near the deep green plants.", type: "Guardian"}]},
+            { stage: 1, q: "The sun is going down fast. We need a place to sleep tonight. Any ideas?", options: [{text: "I'll build a hut with leaves and wood.", type: "Maker"}, {text: "Let's find a cave and check if it's safe.", type: "Strategist"}, {text: "Don't worry! Let's set up a safe camp together before dark!", type: "Leader"}]},
+            { stage: 1, q: "Check this out! I found an old map in the sand. What do you think about it?", options: [{text: "I'll try to solve the hidden puzzles on it.", type: "Strategist"}, {text: "I wonder why this map was left here...", type: "Philosopher"}, {text: "It's too faded to read. Let me redraw it!", type: "Artist"}]},
+            { stage: 1, q: "Shh! Did you hear that? Something is moving in the bushes. What are you going to do?”, options: [{text: "Quick! Let's get out of here as fast as we can!", type: "Athlete"}, {text: "Let’s keep quiet and watch its movement first.", type: "Guardian"}, {text: "Grab a heavy stick! We need to defend ourselves.", type: "Maker"}]},
+            { stage: 1, q: "A plane! Look up there! How can we show them that we are here?", options: [{text: "I'll make a giant 'HELP' sign with shells.", type: "Artist"}, {text: "I'll start a big fire and keep it burning.", type: "Maker"}, {text: "Everyone! Wave your clothes at the same time!", type: "Leader"}]},
+            { stage: 1, q: "It's our first night under the stars. How are you feeling right now, buddy?", options: [{text: "I'm excited to plan our moves for tomorrow!", type: "Leader"}, {text: "I'm thinking about the meaning of this trip.", type: "Philosopher"}, {text: "I'm tired but I still have energy for tomorrow.", type: "Athlete"}]},
+            
+            // Stage 2: Desert (8-14)
+            { stage: 2, q: "It’s so hot here... We need to carry these water bags. Can you help me?", options: [{text: "No problem! Give the heaviest ones to me.", type: "Athlete"}, {text: "Let’s plan the shortest route to the camp.", type: "Strategist"}, {text: "I’ll tie them together to carry like a backpack.", type: "Maker"}]},
+            { stage: 2, q: "Phew, the sun is melting me! How are you planning to stay cool?", options: [{text: "That spot under the trees looks cooler. I'm going!", type: "Artist"}, {text: "I'll only walk in the shadows of the rocks.", type: "Strategist"}, {text: "Let's take a break in the shade. Safety first!", type: "Leader"}]},
+            { stage: 2, q: "Whoa... is that a real Pyramid? It's huge! What's the first thing you notice?", options: [{text: "How did they build this without machines?", type: "Maker"}, {text: "What kind of secret symbols are on the walls?", type: "Strategist"}, {text: "The scale is just unreal. It's massive!", type: "Artist"}]},
+            { stage: 2, q: "The door is stuck! We can't get in. How should we open this heavy stone?", options: [{text: "I'll try to use my power to push it!", type: "Athlete"}, {text: "I'll look for a lever or hidden button.", type: "Strategist"}, {text: "I'll listen to the echoes to find another way.", type: "Artist"}]},
+            { stage: 2, q: "Look, there's a traveler over there. He looks lost. Should we talk to him?", options: [{text: "Let's talk to him. He might be able to help us!", type: "Leader"}, {text: "Wait, stay back. We don’t know if he’s dangerous.", type: "Guardian"}, {text: "I wonder how long he’s been standing here alone..", type: "Philosopher"}]},
+            { stage: 2, q: "The traveler wants to give us a gift! This is awesome. Which one do you want?", options: [{text: "An old map of the desert.", type: "Philosopher"}, {text: "A fast and strong camel to ride on.", type: "Athlete"}, {text: "A rare blue stone found only here.", type: "Artist"}]},
+            { stage: 2, q: "The desert sky is so clear tonight. What are you doing right now?", options: [{text: "I'll use the stars to plan our route.", type: "Strategist"}, {text: "I'll take a photo. It’s so beautiful.", type: "Artist"}, {text: "I'll just watch the stars and feel the universe.", type: "Philosopher"}]},
+
+            // Stage 3: Jungle (15-20)
+            { stage: 3, q: "It's a maze. How do we move?", options: [{text: "I’ll lead. I’ll clear the path.", type: "Athlete"}, {text: "Check the compass. Stick to the heading.", type: "Strategist"}, {text: "I'll track the sun and moss for direction.", type: "Guardian"}]},
+            { stage: 3, q: "Crap, a monkey swiped our bag!", options: [{text: "Shout and scare it into dropping it.", type: "Athlete"}, {text: "Distract it with food, then grab the bag.", type: "Strategist"}, {text: "Let it go. Not worth the fight.", type: "Philosopher"}]},
+            { stage: 3, q: "The villagers look suspicious. Now what?", options: [{text: "Hands up, walk slow. Show we’re chill.", type: "Leader"}, {text: "Wait and watch. See how they react first.", type: "Guardian"}, {text: "Just use hand gestures and vibe with them.", type: "Artist"}]},
+            { stage: 3, q: "They need help with chores. You in?", options: [{text: "I’ll haul the heavy timber. Good workout.", type: "Athlete"}, {text: "I’ll help organize their storage system.", type: "Strategist"}, {text: "I’ll hang out and play games with the kids.", type: "Leader"}]},
+            { stage: 3, q: "The festival is starting! Your move?", options: [{text: "I’m getting in there and joining the dance.", type: "Artist"}, {text: "I’ll just vibe in the back and enjoy the music.", type: "Philosopher"}, {text: "I'll keep an eye on our stuff.", type: "Guardian"}]},
+            { stage: 3, q: "We’re out! What’s your takeaway?", options: [{text: "Our teamwork. We actually crushed it.", type: "Leader"}, {text: "The views. That jungle was insane.", type: "Guardian"}, {text: "The grind. I feel way more resilient now.", type: "Philosopher"}]}
         ];
 
         let currentIdx = 0;
-        let scores = { "Communication": 0, "Analysis": 0, "Nature": 0, "Practicality": 0, "Creativity": 0 };
-        let choiceHistory = [];
+        let scores = {};
+        let history = [];
 
-        function startQuiz() {
-            currentIdx = 0;
-            scores = { "Communication": 0, "Analysis": 0, "Nature": 0, "Practicality": 0, "Creativity": 0 };
-            choiceHistory = [];
-            showPage('quiz-page');
+        function goToStart() {
+            document.getElementById('intro-image').classList.add('moved');
+            document.getElementById('intro-page').classList.add('hidden');
+            document.getElementById('quiz-page').classList.remove('hidden');
             createHearts();
             renderQuestion();
         }
@@ -230,77 +212,78 @@
         function createHearts() {
             const gauge = document.getElementById('heart-gauge');
             gauge.innerHTML = '';
-            for (let i = 0; i < questions.length; i++) {
-                const span = document.createElement('span');
-                span.className = 'heart';
-                span.innerText = '♥';
-                gauge.appendChild(span);
+            for (let i = 0; i < 10; i++) {
+                const s = document.createElement('span');
+                s.className = 'heart';
+                s.innerText = '♥';
+                gauge.appendChild(s);
             }
         }
 
         function renderQuestion() {
-            const qData = questions[currentIdx];
-            document.getElementById('question-text').innerText = qData.q;
-            const optionsBox = document.getElementById('options-container');
-            optionsBox.innerHTML = '';
-            qData.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'btn';
-                btn.innerText = opt.text;
-                btn.onclick = () => selectOption(opt.type);
-                optionsBox.appendChild(btn);
+            const q = questions[currentIdx];
+            
+            // 배경 전환
+            if (q.stage === 1) document.body.style.backgroundImage = backgrounds.stage1;
+            else if (q.stage === 2) document.body.style.backgroundImage = backgrounds.stage2;
+            else if (q.stage === 3) document.body.style.backgroundImage = backgrounds.stage3;
+
+            document.getElementById('stage-text').innerText = `Stage ${q.stage}: ` + (q.stage===1?"Island":q.stage===2?"Desert":"Jungle");
+            document.getElementById('question-text').innerText = q.q;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            q.options.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'btn';
+                b.innerText = opt.text;
+                b.onclick = () => select(opt.type);
+                container.appendChild(b);
             });
-            updateHearts();
-            document.getElementById('prev-btn').style.display = currentIdx > 0 ? 'inline-block' : 'none';
+
+            // 하트 업데이트 (10개 단위로 순환)
+            const hearts = document.querySelectorAll('.heart');
+            const heartPos = currentIdx % 10;
+            hearts.forEach((h, i) => {
+                if (i <= heartPos) h.classList.add('fill');
+                else h.classList.remove('fill');
+            });
+
+            document.getElementById('prev-btn').style.visibility = currentIdx > 0 ? 'visible' : 'hidden';
         }
 
-        function selectOption(type) {
-            choiceHistory.push(type);
-            scores[type]++;
+        function select(type) {
+            history.push(type);
+            scores[type] = (scores[type] || 0) + 1;
             currentIdx++;
             if (currentIdx < questions.length) renderQuestion();
             else showResult();
         }
 
-        function updateHearts() {
-            const hearts = document.querySelectorAll('.heart');
-            hearts.forEach((h, i) => {
-                if (i < currentIdx) h.classList.add('fill');
-                else h.classList.remove('fill');
-            });
-        }
-
         function goBack() {
             if (currentIdx > 0) {
                 currentIdx--;
-                const lastType = choiceHistory.pop();
-                scores[lastType]--;
+                const last = history.pop();
+                scores[last]--;
                 renderQuestion();
             }
         }
 
         function showResult() {
-            showPage('result-page');
-            const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-            document.getElementById('rank-display').innerHTML = sorted.slice(0, 3).map((item, idx) => `
-                <div style="flex:1; border:1px solid #ddd; border-radius:10px; padding:10px; background:#fff;">
-                    <span style="font-size:0.7rem;">${idx+1}st</span><br><b>${item[0]}</b>
-                </div>
-            `).join('');
-            document.getElementById('desc-list').innerHTML = sorted.slice(0, 3).map((item, idx) => `
-                <p><b>${item[0]}:</b> ${getDescription(item[0])}</p>
-            `).join('');
-        }
+            document.getElementById('quiz-page').classList.add('hidden');
+            document.getElementById('result-page').classList.remove('hidden');
+            
+            const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+            const top = sorted[0][0];
 
-        function getDescription(type) {
-            const desc = {
-                "Communication": "Excellent at connecting with people.",
-                "Analysis": "A sharp strategist.",
-                "Practicality": "A doer who makes things happen.",
-                "Creativity": "Uniquely expressive.",
-                "Nature": "Deep insight into the world."
-            };
-            return desc[type];
+            document.getElementById('rank-display').innerHTML = `
+                <div style="font-size: 2rem; font-weight: 900; color: #333;">You are a <span style="color:#e74c3c;">${top}</span>!</div>
+            `;
+            
+            document.getElementById('desc-list').innerHTML = `
+                <p><b>Top Trait: ${top}</b><br>You showed amazing potential during the journey!</p>
+                <p style="font-size:0.9rem; color:#666;">Other strong traits: ${sorted.slice(1,3).map(x=>x[0]).join(', ')}</p>
+            `;
         }
     </script>
 </body>
