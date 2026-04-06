@@ -8,123 +8,93 @@
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 
-        html, body {
-            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
-        }
-
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
         body {
             font-family: 'Pretendard', -apple-system, sans-serif;
             display: flex; justify-content: center; align-items: center;
             min-height: 100dvh; color: #333;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: background-image 1.2s ease-in-out;
-            position: relative;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            transition: background-image 1.2s ease-in-out; position: relative;
         }
-
-        /* 배경 보정용 가상 요소 */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: inherit; background-size: cover; background-position: center; z-index: -1;
         }
 
-        /* 인트로 지도 설정 */
+        /* 인트로 지도 */
         #intro-image {
-            position: fixed;
-            top: 25%; 
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 440px;
-            max-width: 85vw;
-            height: auto;
-            z-index: 5;
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            pointer-events: none;
+            position: fixed; top: 25%; left: 50%; transform: translate(-50%, -50%);
+            width: 440px; max-width: 85vw; height: auto; z-index: 5;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); pointer-events: none;
         }
-
-        /* 이동 후 크기 및 위치 (더 크게 유지) */
         #intro-image.moved {
-            top: 60px;
-            left: calc(100% - 40px);
-            transform: translate(-100%, 0);
-            width: 320px; 
-            z-index: 100;
-            opacity: 0.9;
+            top: 60px; left: calc(100% - 40px); transform: translate(-100%, 0);
+            width: 300px; z-index: 100; opacity: 0.9;
         }
 
-        /* 인트로 텍스트 레이아웃 - 지도와 가깝게 조정 */
         #intro-page {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100dvh;
-            display: flex; flex-direction: column;
-            justify-content: center; 
-            align-items: center;
-            background: transparent;
-            z-index: 10;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: transparent; z-index: 10;
         }
 
         .card {
-            width: 92%; max-width: 480px;
-            padding: 35px 20px; text-align: center; position: relative;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            box-sizing: border-box;
-            z-index: 20;
+            width: 92%; max-width: 500px; padding: 35px 20px; text-align: center;
+            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px);
+            border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); box-sizing: border-box; z-index: 20;
         }
-
         .hidden { display: none !important; }
 
         .intro-title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 5rem;
-            margin: 0;
-            margin-top: 220px; /* 지도 바로 아래 오도록 간격 조정 */
-            color: #2c3e50;
-            text-shadow: 0 2px 15px rgba(255,255,255,1);
+            font-family: 'Dancing Script', cursive; font-size: 5rem; margin: 220px 0 0 0;
+            color: #2c3e50; text-shadow: 0 2px 15px rgba(255,255,255,1);
         }
-
-        .intro-desc {
-            font-size: 1.6rem;
-            font-weight: 800;
-            line-height: 1.3;
-            margin: 10px 0 30px 0;
-            color: #444;
-            text-shadow: 0 2px 10px rgba(255,255,255,0.8);
+        .intro-desc { 
+            font-size: 1.2rem; font-weight: 800; margin: 20px 0 40px 0; color: #333; 
+            line-height: 1.6; word-break: keep-all; max-width: 85%;
         }
-
+        
         .start-btn {
-            width: 280px; padding: 20px; border: none; border-radius: 20px;
-            background: #333; color: #fff; font-size: 1.3rem; font-weight: 700;
-            cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            width: 280px; padding: 22px; border: none; border-radius: 20px;
+            background: #333; color: #fff; font-size: 1.4rem; font-weight: 700;
+            cursor: pointer; transition: 0.3s; margin-top: 20px;
         }
 
-        /* 캐릭터 및 퀴즈 UI */
-        .char-container { width: 130px; margin: 0 auto 15px; animation: floating 3s ease-in-out infinite; }
+        .char-container { width: 120px; margin: 0 auto 10px; animation: floating 3s ease-in-out infinite; }
         .char-container img { width: 100%; }
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         .bubble {
-            background: #fdfdfd; padding: 18px; border-radius: 20px; margin-bottom: 20px;
-            font-size: 1.05rem; line-height: 1.5; font-weight: 700; border: 2.5px solid #333;
+            background: #fff; padding: 20px; border-radius: 25px; margin-top: 10px; margin-bottom: 25px;
+            font-size: 1.05rem; line-height: 1.5; font-weight: 700; border: 3px solid #333;
+            position: relative; word-break: keep-all;
+        }
+        .bubble::before {
+            content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            border-width: 0 15px 15px; border-style: solid; border-color: transparent transparent #333;
         }
 
         .btn {
-            display: block; width: 100%; padding: 16px; margin: 8px 0;
-            border: 1px solid #ddd; border-radius: 12px; background: #fff;
-            font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s;
-            text-align: left;
+            display: block; width: 100%; padding: 16px; margin: 10px 0;
+            border: 1px solid #ddd; border-radius: 15px; background: #fff;
+            font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; text-align: left;
         }
-        .btn:hover { background: #333; color: #fff; transform: translateY(-2px); }
+        .btn:hover { background: #333; color: #fff; }
 
-        .heart-gauge { display: flex; justify-content: center; gap: 4px; margin: 15px 0; font-size: 1.2rem; color: #eee; }
-        .heart.fill { color: #e74c3c; transition: color 0.3s; }
-        
-        .stage-indicator {
-            font-weight: 900; color: #888; font-size: 0.8rem; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;
-        }
+        .rank-wrapper { display: flex; align-items: flex-end; justify-content: center; gap: 8px; margin: 20px 0; }
+        .rank-box { flex: 1; padding: 10px 5px; border-radius: 12px; background: #fff; border-width: 2.5px; border-style: solid; }
+        .rank-box.gold { height: 100px; border-color: #f1c40f; order: 2; }
+        .rank-box.silver { height: 85px; border-color: #bdc3c7; order: 1; }
+        .rank-box.bronze { height: 80px; border-color: #e67e22; order: 3; }
+        .rank-box b { display: block; font-size: 1rem; margin-top: 5px; }
+        .rank-box span { font-size: 0.7rem; font-weight: 800; color: #999; }
+
+        .desc-area { text-align: left; background: #fdfdfd; padding: 18px; border-radius: 20px; font-size: 0.85rem; border: 1px solid #eee; }
+        .desc-area p { margin: 8px 0; line-height: 1.4; color: #444; }
+
+        .heart-gauge { display: flex; justify-content: center; gap: 4px; margin-top: 15px; font-size: 1.2rem; color: #eee; }
+        .heart.fill { color: #e74c3c; }
+        .stage-indicator { font-weight: 900; color: #aaa; font-size: 0.8rem; margin-bottom: 5px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -134,70 +104,95 @@
     <div id="intro-page">
         <h2 class="intro-title">Welcome!</h2>
         <p class="intro-desc">
-            Find your unique talents.<br>
-            Ready for the journey?
+            Embark on a legendary quest to uncover the hidden powers within you. 
+            Navigate through mysterious islands, scorching deserts, and deep jungles. 
+            Every choice you make defines your true potential. 
+            Are you ready to face the challenges and find your destiny?
         </p>
-        <button class="start-btn" onclick="goToStart()">Start Journey</button>
+        <button class="start-btn" onclick="goToStory(1)">Start Journey</button>
+    </div>
+
+    <div id="story-page" class="card hidden">
+        <div class="stage-indicator" id="story-stage-text">Stage 1</div>
+        <div class="char-container"><img src="cha.png" alt="Character"></div>
+        <div class="bubble" id="story-text"></div>
+        <button class="btn" style="background:#333; color:#fff; text-align:center;" onclick="startQuizFromStory()">Continue Quest</button>
     </div>
 
     <div id="quiz-page" class="card hidden">
-        <div class="stage-indicator" id="stage-text">Stage 1: Deserted Island</div>
-        <div class="char-container"><img src="cha.png" id="quiz-char" alt="Character"></div>
-        <div class="bubble" id="question-text">Loading...</div>
+        <div class="stage-indicator" id="quiz-stage-text">Stage 1</div>
+        <div class="char-container"><img src="cha.png" alt="Character"></div>
+        <div class="bubble" id="question-text"></div>
         <div id="options-container"></div>
         <div class="heart-gauge" id="heart-gauge"></div>
         <button id="prev-btn" style="background:none; border:none; color:#999; text-decoration:underline; cursor:pointer; margin-top:10px; font-weight:700;" onclick="goBack()">Back</button>
     </div>
 
     <div id="result-page" class="card hidden">
-        <h2 style="font-weight: 900;">Adventure Result</h2>
-        <div id="rank-display" style="margin:20px 0;"></div>
-        <div id="desc-list" style="text-align:left; background:#f9f9f9; padding:20px; border-radius:20px; font-size:0.95rem;"></div>
-        <button class="start-btn" style="margin-top:20px; width:100%;" onclick="location.reload()">Retake Journey</button>
+        <h2 style="font-weight: 900; font-size: 1.6rem; margin-bottom: 10px;">Assessment Result</h2>
+        <div class="char-container"><img src="result_character.png" alt="Character"></div>
+        <div class="rank-wrapper" id="rank-container"></div>
+        <div class="desc-area" id="desc-list"></div>
+        <button class="start-btn" style="width:100%; margin-top:25px;" onclick="location.reload()">Retake Journey</button>
     </div>
 
     <script>
-        const backgrounds = {
-            stage1: "url('samak.png')", 
-            stage2: "url('desert_bg.png')",
-            stage3: "url('jungle_bg.png')"
+        const backgrounds = { stage1: "url('samak.png')", stage2: "url('desert_bg.png')", stage3: "url('jungle_bg.png')" };
+        const stageStories = {
+            1: "🏝️ Stage 1: The Deserted Island (Quest 1-5)",
+            2: "🏜️ Stage 2: The Hot Desert (Quest 6-10)",
+            3: "🌿 Stage 3: The Deep Jungle (Quest 11-15)"
         };
 
         const questions = [
-            // Stage 1: The Deserted Island (1-7)
-            { stage: 1, q: "Hey, look! We finally woke up on this beach. What should we do first?", options: [{text: "Let's shout for help and look for people!", type: "Leader"}, {text: "I'll scout the area for animal tracks or fruit.", type: "Guardian"}, {text: "I'll find a sharp stone to make a tool.", type: "Maker"}]},
-            { stage: 1, q: "I'm so thirsty... My throat is burning. How are we going to get some water?", options: [{text: "I'll build a system to catch rain water.", type: "Strategist"}, {text: "I’ll climb that tall tree to get some coconuts!", type: "Athlete"}, {text: "I think water is near the deep green plants.", type: "Guardian"}]},
-            { stage: 1, q: "The sun is going down fast. We need a place to sleep tonight. Any ideas?", options: [{text: "I'll build a hut with leaves and wood.", type: "Maker"}, {text: "Let's find a cave and check if it's safe.", type: "Strategist"}, {text: "Don't worry! Let's set up a safe camp together!", type: "Leader"}]},
-            { stage: 1, q: "Check this out! I found an old map in the sand. What do you think about it?", options: [{text: "I'll try to solve the hidden puzzles on it.", type: "Strategist"}, {text: "I wonder why this map was left here...", type: "Philosopher"}, {text: "It's too faded. Let me redraw it!", type: "Artist"}]},
-            { stage: 1, q: "Shh! Did you hear that? Something is moving in the bushes. What are you going to do?", options: [{text: "Quick! Let's get out of here as fast as we can!", type: "Athlete"}, {text: "Let’s keep quiet and watch its movement.", type: "Guardian"}, {text: "Grab a heavy stick! We need to defend ourselves.", type: "Maker"}]},
-            { stage: 1, q: "A plane! Look up there! How can we show them that we are here?", options: [{text: "I'll make a giant 'HELP' sign with shells.", type: "Artist"}, {text: "I'll start a big fire and keep it burning.", type: "Maker"}, {text: "Everyone! Wave your clothes at the same time!", type: "Leader"}]},
-            { stage: 1, q: "It's our first night under the stars. How are you feeling right now, buddy?", options: [{text: "I'm excited to plan our moves for tomorrow!", type: "Leader"}, {text: "I'm thinking about the meaning of this trip.", type: "Philosopher"}, {text: "I'm tired but I still have energy left.", type: "Athlete"}]},
-            
-            // Stage 2: The Hot Desert (8-14)
-            { stage: 2, q: "It’s so hot here... We need to carry these water bags. Can you help me?", options: [{text: "No problem! Give the heaviest ones to me.", type: "Athlete"}, {text: "Let’s plan the shortest route to the camp.", type: "Strategist"}, {text: "I’ll tie them together to carry like a backpack.", type: "Maker"}]},
-            { stage: 2, q: "Phew, the sun is melting me! How are you planning to stay cool?", options: [{text: "That spot under the trees looks cooler.", type: "Artist"}, {text: "I'll only walk in the shadows of the rocks.", type: "Strategist"}, {text: "Let's take a break in the shade.", type: "Leader"}]},
-            { stage: 2, q: "Whoa... is that a real Pyramid? It's huge! What's the first thing you notice?", options: [{text: "How did they build this without machines?", type: "Maker"}, {text: "What kind of secret symbols are on the walls?", type: "Strategist"}, {text: "The scale is just unreal. It's massive!", type: "Artist"}]},
-            { stage: 2, q: "The door is stuck! We can't get in. How should we open this heavy stone?", options: [{text: "I'll try to use my power to push it!", type: "Athlete"}, {text: "I'll look for a lever or hidden button.", type: "Strategist"}, {text: "I'll listen to the echoes to find another way.", type: "Artist"}]},
-            { stage: 2, q: "Look, there's a traveler over there. He looks lost. Should we talk to him?", options: [{text: "Let's talk to him. He might help us out!", type: "Leader"}, {text: "Wait, stay back. We don’t know him.", type: "Guardian"}, {text: "I wonder how long he’s been here alone..", type: "Philosopher"}]},
-            { stage: 2, q: "The traveler wants to give us a gift! This is awesome. Which one do you want?", options: [{text: "An old map of the desert.", type: "Philosopher"}, {text: "A fast and strong camel to ride on.", type: "Athlete"}, {text: "A rare blue stone found only here.", type: "Artist"}]},
-            { stage: 2, q: "The desert sky is so clear tonight. What are you doing right now?", options: [{text: "I'll use the stars to plan our route.", type: "Strategist"}, {text: "I'll take a photo of these beautiful stars.", type: "Artist"}, {text: "I'll just watch the stars and feel the universe.", type: "Philosopher"}]},
-
-            // Stage 3: The Deep Jungle (15-20)
-            { stage: 3, q: "It's a maze. How do we move?", options: [{text: "I’ll lead. I’ll clear the path.", type: "Athlete"}, {text: "Check the compass. Stick to the heading.", type: "Strategist"}, {text: "I'll track the sun and moss for direction.", type: "Guardian"}]},
-            { stage: 3, q: "Crap, a monkey swiped our bag!", options: [{text: "Shout and scare it into dropping it.", type: "Athlete"}, {text: "Distract it with food, then grab the bag.", type: "Strategist"}, {text: "Let it go. Not worth the fight.", type: "Philosopher"}]},
-            { stage: 3, q: "The villagers look suspicious. Now what?", options: [{text: "Hands up, walk slow. Show we’re chill.", type: "Leader"}, {text: "Wait and watch. See how they react first.", type: "Guardian"}, {text: "Just use hand gestures and vibe with them.", type: "Artist"}]},
-            { stage: 3, q: "They need help with chores. You in?", options: [{text: "I’ll haul the heavy timber. Good workout.", type: "Athlete"}, {text: "I’ll help organize their storage system.", type: "Strategist"}, {text: "I’ll hang out and play games with the kids.", type: "Leader"}]},
-            { stage: 3, q: "The festival is starting! Your move?", options: [{text: "I’m getting in there and joining the dance.", type: "Artist"}, {text: "I’ll just vibe in the back and enjoy music.", type: "Philosopher"}, {text: "I'll keep an eye on our stuff.", type: "Guardian"}]},
-            { stage: 3, q: "We’re out! What’s your takeaway?", options: [{text: "Our teamwork. We actually crushed it.", type: "Leader"}, {text: "The views. That jungle was insane.", type: "Guardian"}, {text: "The grind. I feel way more resilient now.", type: "Philosopher"}]}
+            // Stage 1
+            { stage: 1, q: "\"First step on the beach! What’s the plan?\"", options: [{text: "Let's look for people and get help!", type: "Leader"}, {text: "I'll find a sharp stone to make a tool.", type: "Maker"}, {text: "I'll stay calm and think of a plan.", type: "Strategist"}]},
+            { stage: 1, q: "\"I'm so thirsty... How do we get water?\"", options: [{text: "I’ll climb that tree for coconuts!", type: "Athlete"}, {text: "I'll build a system to catch rain.", type: "Maker"}, {text: "I'll find a way to make the sea water drinkable.", type: "Strategist"}]},
+            { stage: 1, q: "\"Look! An old map in the sand. What do you think?\"", options: [{text: "I'll solve the hidden puzzles on it.", type: "Strategist"}, {text: "I wonder why this map was left here...", type: "Philosopher"}, {text: "Let me redraw it to show the island's shape!", type: "Artist"}]},
+            { stage: 1, q: "\"Something is moving in the bushes! What now?\"", options: [{text: "Grab a heavy stick! We need to defend ourselves.", type: "Maker"}, {text: "Quick! Let's run as fast as we can!", type: "Athlete"}, {text: "Don't move! Let's see what it is before we act.", type: "Leader"}]},
+            { stage: 1, q: "\"A plane! How do we show them we are here?\"", options: [{text: "I'll make a giant 'HELP' sign with shells.", type: "Artist"}, {text: "I'll start a big fire with lots of smoke.", type: "Maker"}, {text: "Everyone! Wave your clothes together!", type: "Leader"}]},
+            // Stage 2
+            { stage: 2, q: "\"It’s so hot... Can you help me with these water bags?\"", options: [{text: "No problem! Give the heaviest ones to me.", type: "Athlete"}, {text: "Let’s find the shortest route to save energy.", type: "Strategist"}, {text: "I’ll tie them together to carry them easily.", type: "Maker"}]},
+            { stage: 2, q: "\"The sun is melting me! How do we stay cool?\"", options: [{text: "That spot under the trees looks so much cooler!", type: "Artist"}, {text: "Let's take a break in the shade. Safety first!", type: "Leader"}, {text: "I'll only walk in the shadows of the rocks.", type: "Strategist"}]},
+            { stage: 2, q: "\"Whoa... a Pyramid! What's the first thing you notice?\"", options: [{text: "How did they build this without machines?", type: "Maker"}, {text: "It’s way more massive in person! The scale is unreal.", type: "Artist"}, {text: "What kind of secret symbols are on the walls?", type: "Philosopher"}]},
+            { stage: 2, q: "\"There's a traveler over there. Should we talk to him?\"", options: [{text: "Let's talk to him. He might help us out!", type: "Leader"}, {text: "Wait, stay back. He might be dangerous.", type: "Philosopher"}, {text: "I wonder how long he's been out here alone...", type: "Artist"}]},
+            { stage: 2, q: "\"The desert sky is so clear. What are you doing right now?\"", options: [{text: "I'll take a photo of these stars. Perfect shot!", type: "Artist"}, {text: "I'll use the stars to plan our route for tomorrow.", type: "Strategist"}, {text: "I'll just watch the stars and think about home.", type: "Philosopher"}]},
+            // Stage 3
+            { stage: 3, q: "\"It's like a green maze. How do we move?\"", options: [{text: "I’ll lead the way and clear the path.", type: "Athlete"}, {text: "Check the compass. Stick to the heading.", type: "Strategist"}, {text: "I'll use the sun and moss for direction.", type: "Leader"}]},
+            { stage: 3, q: "\"Crap, a monkey swiped our bag! What's the move?\"", options: [{text: "I'll chase it and get our bag back!", type: "Athlete"}, {text: "Let's distract it with some fruit first.", type: "Leader"}, {text: "It’s just a bag. Let it go. Safety is more important.", type: "Philosopher"}]},
+            { stage: 3, q: "\"The villagers look suspicious. Now what?\"", options: [{text: "Hands up, walk slow. Show we’re friendly.", type: "Leader"}, {text: "Wait and watch. See how they react first.", type: "Philosopher"}, {text: "I'll use hand gestures and vibe with them.", type: "Artist"}]},
+            { stage: 3, q: "\"The villagers are having a festival! Your move?\"", options: [{text: "I’m hitting the center and dancing!", type: "Artist"}, {text: "I’ll just chill and listen to the music.", type: "Philosopher"}, {text: "I’ll help them with the heavy lifting or tasks.", type: "Athlete"}]},
+            { stage: 3, q: "\"We finally made it out! What was the best part?\"", options: [{text: "Our teamwork. We crushed it together!", type: "Leader"}, {text: "The views. That jungle was insane.", type: "Artist"}, {text: "That was a tough workout! I feel much stronger now.", type: "Athlete"}]}
         ];
 
         let currentIdx = 0;
-        let scores = {};
-        let choiceHistory = [];
+        let scores = { "Leader": 0, "Maker": 0, "Strategist": 0, "Athlete": 0, "Philosopher": 0, "Artist": 0 };
+        let history = [];
+        let currentStage = 0;
 
-        function goToStart() {
+        const descs = {
+            "Leader": "Natural-born commander who inspires and unifies the team.",
+            "Strategist": "Sharp thinker who finds the most efficient path to success.",
+            "Athlete": "Powerhouse with endless energy and physical resilience.",
+            "Maker": "Skilled creator who can build anything from scratch.",
+            "Artist": "Creative visionary who finds beauty and expression everywhere.",
+            "Philosopher": "Deep thinker who explores the meaning and wisdom of life."
+        };
+
+        function goToStory(stage) {
+            currentStage = stage;
             document.getElementById('intro-image').classList.add('moved');
             document.getElementById('intro-page').classList.add('hidden');
+            document.getElementById('quiz-page').classList.add('hidden');
+            const storyPage = document.getElementById('story-page');
+            storyPage.classList.remove('hidden');
+            document.body.style.backgroundImage = backgrounds[`stage${stage}`];
+            document.getElementById('story-stage-text').innerText = `Quest Stage ${stage}`;
+            document.getElementById('story-text').innerHTML = stageStories[stage];
+        }
+
+        function startQuizFromStory() {
+            document.getElementById('story-page').classList.add('hidden');
             document.getElementById('quiz-page').classList.remove('hidden');
             createHearts();
             renderQuestion();
@@ -206,50 +201,38 @@
         function createHearts() {
             const gauge = document.getElementById('heart-gauge');
             gauge.innerHTML = '';
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 5; i++) { // 각 스테이지당 5문제 기준
                 const s = document.createElement('span');
-                s.className = 'heart';
-                s.innerText = '♥';
+                s.className = 'heart'; s.innerText = '♥';
                 gauge.appendChild(s);
             }
         }
 
         function renderQuestion() {
             const q = questions[currentIdx];
-            
-            // 스테이지별 배경 전환
-            const body = document.body;
-            if (q.stage === 1) body.style.backgroundImage = backgrounds.stage1;
-            else if (q.stage === 2) body.style.backgroundImage = backgrounds.stage2;
-            else if (q.stage === 3) body.style.backgroundImage = backgrounds.stage3;
-
-            document.getElementById('stage-text').innerText = `Stage ${q.stage}: ` + (q.stage===1?"Island":q.stage===2?"Desert":"Jungle");
+            if (q.stage !== currentStage) { goToStory(q.stage); return; }
+            document.getElementById('quiz-stage-text').innerText = `Quest Stage ${q.stage}`;
             document.getElementById('question-text').innerText = q.q;
-            
             const container = document.getElementById('options-container');
             container.innerHTML = '';
             q.options.forEach(opt => {
                 const b = document.createElement('button');
-                b.className = 'btn';
-                b.innerText = opt.text;
+                b.className = 'btn'; b.innerText = opt.text;
                 b.onclick = () => select(opt.type);
                 container.appendChild(b);
             });
-
-            // 하트 게이지 업데이트 (10개 순환)
             const hearts = document.querySelectorAll('.heart');
-            const activeHeartIdx = currentIdx % 10;
+            const activeIdx = currentIdx % 5;
             hearts.forEach((h, i) => {
-                if (i <= activeHeartIdx) h.classList.add('fill');
+                if (i <= activeIdx) h.classList.add('fill');
                 else h.classList.remove('fill');
             });
-
             document.getElementById('prev-btn').style.visibility = currentIdx > 0 ? 'visible' : 'hidden';
         }
 
         function select(type) {
-            choiceHistory.push(type);
-            scores[type] = (scores[type] || 0) + 1;
+            history.push(type);
+            scores[type]++;
             currentIdx++;
             if (currentIdx < questions.length) renderQuestion();
             else showResult();
@@ -258,8 +241,9 @@
         function goBack() {
             if (currentIdx > 0) {
                 currentIdx--;
-                const last = choiceHistory.pop();
+                const last = history.pop();
                 scores[last]--;
+                currentStage = questions[currentIdx].stage;
                 renderQuestion();
             }
         }
@@ -267,20 +251,16 @@
         function showResult() {
             document.getElementById('quiz-page').classList.add('hidden');
             document.getElementById('result-page').classList.remove('hidden');
-            
             const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
-            const top = sorted[0][0];
-
-            document.getElementById('rank-display').innerHTML = `
-                <div style="font-size: 1.8rem; font-weight: 900; color: #2c3e50;">You are a <span style="color:#e74c3c;">${top}</span>!</div>
+            const container = document.getElementById('rank-container');
+            container.innerHTML = `
+                <div class="rank-box silver"><span>2nd</span><b>${sorted[1][0]}</b></div>
+                <div class="rank-box gold"><span>1st</span><b>${sorted[0][0]}</b></div>
+                <div class="rank-box bronze"><span>3rd</span><b>${sorted[2][0]}</b></div>
             `;
-            
-            document.getElementById('desc-list').innerHTML = `
-                <p><b>Top Trait: ${top}</b><br>You navigated the island, desert, and jungle with outstanding ${top.toLowerCase()} skills!</p>
-                <p style="color:#666; font-size:0.85rem; border-top:1px solid #ddd; padding-top:10px; margin-top:10px;">
-                    Other notable strengths: ${sorted.slice(1,3).map(x=>x[0]).join(', ')}
-                </p>
-            `;
+            document.getElementById('desc-list').innerHTML = sorted.slice(0, 3).map((item, i) => `
+                <p><b>No.${i+1} ${item[0]}:</b> ${descs[item[0]] || "A unique and valuable talent discovered in the wild."}</p>
+            `).join('');
         }
     </script>
 </body>
