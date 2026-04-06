@@ -2,68 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Student Ability Assessment</title>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 
-        body {
+        /* 아이패드/모바일 배경 잘림 방지 설정 */
+        html, body {
             margin: 0; padding: 0;
-            font-family: 'Pretendard', -apple-system, sans-serif;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; color: #333;
-            background-image: url('samak.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            overflow-x: hidden;
-            overflow: hidden; /* 인트로에서 불필요한 스크롤 제거 */
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* 인트로에서 스크롤 방지 */
         }
 
-        /* [수정] 인트로 지도 위치만 더 위로 (top: 25%) */
-        /* 인트로 지도 - 화면에 완전히 고정 */
+        body {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100dvh; /* 최신 모바일 브라우저 높이 대응 */
+            color: #333;
+            background-image: url('samak.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: scroll; /* 모바일 성능 및 고정을 위해 변경 */
+            position: relative;
+        }
+
+        /* 배경 보정용 가상 요소 (아이패드에서 배경이 밀리는 현상 방지) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: inherit;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        /* 인트로 지도 */
         #intro-image {
             position: fixed;
-            top: 25%; /* 기존 30%에서 더 위로 올림 */
             top: 25%; 
             left: 50%;
             transform: translate(-50%, -50%);
             width: 440px;
+            max-width: 80vw; /* 모바일/아이패드에서 너무 크지 않게 */
             height: auto;
             z-index: 5;
             transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            pointer-events: none; /* 클릭 방해 금지 */
+            pointer-events: none;
         }
 
-        /* 시작 버튼 클릭 후 우측 상단으로 이동할 때 */
+        /* 이동 후 위치 */
         #intro-image.moved {
             top: 20px;
-            left: calc(100% - 60px);
+            left: calc(100% - 30px); /* 패딩 조정 */
             transform: translate(-100%, 0);
-            width: 250px;
+            width: 180px; /* 이동 후 크기 살짝 줄임 */
             z-index: 100;
         }
 
-        /* 인트로 페이지 컨테이너 - 스크롤에 흔들리지 않도록 고정 */
+        /* 인트로 페이지 컨테이너 */
         #intro-page {
             position: fixed;
             top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            width: 100%; height: 100dvh;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             background: transparent;
-            box-shadow: none;
             z-index: 10;
         }
 
-        /* 다른 페이지를 위한 공통 카드 스타일 */
         .card {
             width: 90%; max-width: 450px;
             padding: 40px 15px; text-align: center; position: relative;
             background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
             border-radius: 30px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             border: 1px solid rgba(255,255,255,0.3);
@@ -73,29 +88,28 @@
 
         .hidden { display: none !important; }
 
-        /* 타이틀 및 텍스트 - 위치 고정 */
+        /* 타이틀 및 설명 */
         .intro-title {
             font-family: 'Dancing Script', cursive;
-            font-size: 5rem;
+            font-size: 4.5rem; /* 조금 더 최적화 */
             font-weight: 700;
             margin: 0;
-            margin-top: 240px; /* 지도와의 간격 */
+            margin-top: 150px;
             color: #2c3e50;
             text-shadow: 0 2px 15px rgba(255,255,255,0.9);
         }
 
         .intro-desc {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             line-height: 1.4;
-            margin-bottom: 30px;
+            margin: 20px 0 40px 0;
             color: #333;
             text-align: center;
             word-break: keep-all;
             text-shadow: 0 2px 10px rgba(255,255,255,0.8);
         }
 
-        /* 시작 버튼 */
         .start-btn {
             max-width: 300px;
             width: 80%;
@@ -110,36 +124,24 @@
             transition: 0.2s;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
-        .start-btn:hover { transform: translateY(-3px); background: #000; }
 
-        /* 애니메이션 및 기타 스타일 유지 */
-        .char-container { width: 150px; margin: 0 auto 20px; animation: floating 3s ease-in-out infinite; }
+        /* 기타 캐릭터 및 버튼 스타일 유지 */
+        .char-container { width: 140px; margin: 0 auto 20px; animation: floating 3s ease-in-out infinite; }
         .char-container img { width: 100%; height: auto; }
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         .bubble {
             background: #f9f9f9; padding: 20px; border-radius: 20px; margin-bottom: 25px;
-            font-size: 1.05rem; line-height: 1.5; font-weight: 600; color: #222;
+            font-size: 1rem; line-height: 1.5; font-weight: 600; color: #222;
             position: relative; border: 2px solid #333;
         }
-        .bubble::after {
-            content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            border-width: 0 12px 12px; border-style: solid; border-color: transparent transparent #333;
-        }
-
         .btn {
             display: block; width: 100%; padding: 18px; margin: 10px 0;
             border: 1px solid #e0e0e0; border-radius: 12px; background: #ffffff;
-            font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; color: #444;
+            font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s;
         }
-        .btn:hover { background: #333; color: #fff; }
-
-        .heart-gauge { display: flex; justify-content: center; gap: 5px; margin: 20px 0 10px; font-size: 1.2rem; color: #ddd; }
+        .heart-gauge { display: flex; justify-content: center; gap: 5px; margin: 15px 0; font-size: 1.2rem; color: #ddd; }
         .heart.fill { color: #e74c3c; }
-        
-        .rank-container { display: flex; justify-content: space-between; align-items: flex-end; margin: 30px 0; gap: 8px; }
-        .rank-box { flex: 1; text-align: center; border-radius: 15px; padding: 12px 5px; background: #fff; border: 2px solid #eee; }
-        .rank-1 { transform: scale(1.1); border-color: #FFD700; color: #6C63FF; }
     </style>
 </head>
 <body>
@@ -178,24 +180,17 @@
     <div id="result-page" class="card hidden">
         <div class="char-container"><img src="result_character.png" alt="Character"></div>
         <h2 style="font-weight: 900;">Assessment Result</h2>
-        <div class="rank-container" id="rank-display"></div>
-        <div class="desc-list" id="desc-list" style="text-align:left; font-size:0.9rem; background:#f9f9f9; padding:15px; border-radius:15px;"></div>
+        <div id="rank-display" style="display:flex; gap:10px; margin:20px 0;"></div>
+        <div id="desc-list" style="text-align:left; font-size:0.9rem; background:#f9f9f9; padding:15px; border-radius:15px;"></div>
         <button class="btn" style="margin-top:20px; background:#333; color:#fff;" onclick="location.reload()">Retake</button>
     </div>
 
     <script>
         function goToStart() {
-            // 지도 이동 애니메이션 실행
             const img = document.getElementById('intro-image');
             img.classList.add('moved');
-            
-            // 인트로 페이지 숨기기
             document.getElementById('intro-page').classList.add('hidden');
-            
-            // 실제 시작 카드 보여주기
             showPage('start-page');
-            
-            // 퀴즈 진행 시에는 스크롤이 필요할 수 있으므로 다시 허용 (필요 시)
             document.body.style.overflow = 'auto';
         }
 
@@ -205,7 +200,7 @@
             if(target) target.classList.remove('hidden');
         }
 
-        // --- 퀴즈 로직 (동일) ---
+        // 퀴즈 로직 (질문 생략 - 기존과 동일하게 유지)
         const questions = [
             { q: "How do you gain energy on weekends?", options: [ {text: "Chatting with friends", type: "Communication"}, {text: "Solving puzzles", type: "Analysis"}, {text: "Gardening", type: "Nature"} ] },
             { q: "If you were stuck on a desert island?", options: [ {text: "Build a house", type: "Practicality"}, {text: "Make an escape plan", type: "Analysis"}, {text: "Create an SOS sign", type: "Creativity"} ] },
@@ -287,23 +282,23 @@
         function showResult() {
             showPage('result-page');
             const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-            document.getElementById('rank-display').innerHTML = `
-                <div class="rank-box rank-2"><span style="font-size:0.7rem;">2nd</span><br><b>${sorted[1][0]}</b></div>
-                <div class="rank-box rank-1"><span style="font-size:0.7rem;">1st</span><br><b>${sorted[0][0]}</b></div>
-                <div class="rank-box rank-3"><span style="font-size:0.7rem;">3rd</span><br><b>${sorted[2][0]}</b></div>
-            `;
+            document.getElementById('rank-display').innerHTML = sorted.slice(0, 3).map((item, idx) => `
+                <div style="flex:1; border:1px solid #ddd; border-radius:10px; padding:10px; background:#fff;">
+                    <span style="font-size:0.7rem;">${idx+1}st</span><br><b>${item[0]}</b>
+                </div>
+            `).join('');
             document.getElementById('desc-list').innerHTML = sorted.slice(0, 3).map((item, idx) => `
-                <p><b>No.${idx+1} ${item[0]}:</b> ${getDescription(item[0])}</p>
+                <p><b>${item[0]}:</b> ${getDescription(item[0])}</p>
             `).join('');
         }
 
         function getDescription(type) {
             const desc = {
                 "Communication": "Excellent at connecting with people.",
-                "Analysis": "A sharp strategist in complex situations.",
-                "Practicality": "A doer who turns ideas into reality.",
-                "Creativity": "Expresses new values uniquely.",
-                "Nature": "Deep insight into the environment."
+                "Analysis": "A sharp strategist.",
+                "Practicality": "A doer who makes things happen.",
+                "Creativity": "Uniquely expressive.",
+                "Nature": "Deep insight into the world."
             };
             return desc[type];
         }
