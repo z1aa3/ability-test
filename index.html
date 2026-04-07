@@ -74,12 +74,44 @@
             border-width: 0 15px 15px; border-style: solid; border-color: transparent transparent #333;
         }
 
-        .btn {
-            display: block; width: 100%; padding: 16px; margin: 10px 0;
-            border: 1px solid #ddd; border-radius: 15px; background: #fff;
-            font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; text-align: left;
+   .btn {
+            display: block; 
+            width: 100%; 
+            padding: 16px; 
+            margin: 10px 0;
+            border: 1px solid #ddd; 
+            border-radius: 15px; 
+            background: #fff;
+            
+            /* [수정] 아이패드에서 파란색으로 변하지 않도록 검정색 강제 지정 */
+            color: #333 !important; 
+            -webkit-text-fill-color: #333; /* iOS 전용 텍스트 색상 고정 */
+            
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            text-align: left;
+            
+            /* [추가] 터치 시 발생하는 하이라이트 색상 제거 */
+            -webkit-tap-highlight-color: transparent;
         }
-        .btn:hover { background: #333; color: #fff; }
+
+        /* [수정] 노트북(마우스)에서만 호버 효과가 나타나도록 분리 */
+        @media (hover: hover) {
+            .btn:hover { 
+                background: #333 !important; 
+                color: #fff !important; 
+                -webkit-text-fill-color: #fff;
+            }
+        }
+
+        /* [추가] 아이패드 등 터치 기기에서 클릭했을 때만 잠시 변하도록 설정 */
+        .btn:active {
+            background: #333 !important;
+            color: #fff !important;
+            -webkit-text-fill-color: #fff;
+        }
 
         .rank-wrapper { display: flex; align-items: flex-end; justify-content: center; gap: 8px; margin: 20px 0; }
         .rank-box { flex: 1; padding: 10px 5px; border-radius: 12px; background: #fff; border-width: 2.5px; border-style: solid; }
