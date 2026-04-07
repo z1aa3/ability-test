@@ -74,44 +74,55 @@
             border-width: 0 15px 15px; border-style: solid; border-color: transparent transparent #333;
         }
 
-   .btn {
-            display: block; 
-            width: 100%; 
-            padding: 16px; 
-            margin: 10px 0;
-            border: 1px solid #ddd; 
-            border-radius: 15px; 
-            background: #fff;
+           /* 기본 버튼 설정 */
+        .btn {
+            display: block; width: 100%; padding: 16px; margin: 10px 0;
+            border: 1px solid #ddd; border-radius: 15px; background: #fff;
             
-            /* [수정] 아이패드에서 파란색으로 변하지 않도록 검정색 강제 지정 */
+            /* 아이패드 파란 글씨 방지 및 검정색 고정 */
             color: #333 !important; 
-            -webkit-text-fill-color: #333; /* iOS 전용 텍스트 색상 고정 */
+            -webkit-text-fill-color: #333 !important;
             
-            font-size: 1rem; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            text-align: left;
+            font-size: 1rem; font-weight: 600; cursor: pointer; text-align: left;
+            transition: background 0.1s, color 0.1s; /* 반짝이는 효과를 위한 짧은 트랜지션 */
             
-            /* [추가] 터치 시 발생하는 하이라이트 색상 제거 */
-            -webkit-tap-highlight-color: transparent;
+            /* 터치 시 회색 반짝임 제거 (커스텀 반짝임 사용 예정) */
+            -webkit-tap-highlight-color: transparent; 
         }
 
-        /* [수정] 노트북(마우스)에서만 호버 효과가 나타나도록 분리 */
+        /* [노트북] 일반 선택지 버튼: 마우스 호버 효과 */
         @media (hover: hover) {
-            .btn:hover { 
+            .btn:not(.btn-continue):hover { 
                 background: #333 !important; 
                 color: #fff !important; 
-                -webkit-text-fill-color: #fff;
+                -webkit-text-fill-color: #fff !important;
             }
         }
 
-        /* [추가] 아이패드 등 터치 기기에서 클릭했을 때만 잠시 변하도록 설정 */
-        .btn:active {
+        /* [아이패드] 일반 선택지 버튼: 터치 시 반짝이는 효과 */
+        .btn:not(.btn-continue):active {
+            background: #333 !important; /* 터치하는 순간 배경색 변경 */
+            color: #fff !important;      /* 터치하는 순간 글자색 변경 */
+            -webkit-text-fill-color: #fff !important;
+            transition: background 0s, color 0s; /* 터치 시 즉각적인 반응 */
+        }
+
+        /* Continue Quest 전용: 항상 검정 배경/흰 글씨 고정, 효과 없음 */
+        .btn-continue {
             background: #333 !important;
             color: #fff !important;
-            -webkit-text-fill-color: #fff;
+            -webkit-text-fill-color: #fff !important;
+            text-align: center !important;
+            cursor: default;
         }
+
+        /* Continue Quest 버튼은 터치 시에도 아무 변화 없도록 설정 */
+        .btn-continue:active {
+            background: #333 !important;
+            color: #fff !important;
+            -webkit-text-fill-color: #fff !important;
+        }
+
 
         .rank-wrapper { display: flex; align-items: flex-end; justify-content: center; gap: 8px; margin: 20px 0; }
         .rank-box { flex: 1; padding: 10px 5px; border-radius: 12px; background: #fff; border-width: 2.5px; border-style: solid; }
@@ -144,12 +155,12 @@
         <button class="start-btn" onclick="goToStory(1)">Start Journey</button>
     </div>
 
-    <div id="story-page" class="card hidden">
-        <div class="stage-indicator" id="story-stage-text">Stage 1</div>
-        <div class="char-container"><img src="cha.png" alt="Character"></div>
-        <div class="bubble" id="story-text"></div>
-        <button class="btn" style="background:#333; color:#fff; text-align:center;" onclick="startQuizFromStory()">Continue Quest</button>
-    </div>
+	<div id="story-page" class="card hidden">
+    <div class="stage-indicator" id="story-stage-text">Stage 1</div>
+    <div class="char-container"><img src="cha.png" alt="Character"></div>
+    <div class="bubble" id="story-text"></div>
+    <button class="btn btn-continue" onclick="startQuizFromStory()">Continue Quest</button>
+	</div>
 
     <div id="quiz-page" class="card hidden">
         <div class="stage-indicator" id="quiz-stage-text">Stage 1</div>
