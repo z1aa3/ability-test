@@ -74,7 +74,7 @@
             border-width: 0 15px 15px; border-style: solid; border-color: transparent transparent #333;
         }
 
-           /* 기본 버튼 설정 */
+        /* 기본 버튼 설정 */
         .btn {
             display: block; width: 100%; padding: 16px; margin: 10px 0;
             border: 1px solid #ddd; border-radius: 15px; background: #fff;
@@ -84,13 +84,12 @@
             -webkit-text-fill-color: #333 !important;
             
             font-size: 1rem; font-weight: 600; cursor: pointer; text-align: left;
-            transition: background 0.1s, color 0.1s; /* 반짝이는 효과를 위한 짧은 트랜지션 */
             
-            /* 터치 시 회색 반짝임 제거 (커스텀 반짝임 사용 예정) */
+            /* 터치 시 기본 회색 하이라이트 제거 */
             -webkit-tap-highlight-color: transparent; 
         }
 
-        /* [노트북] 일반 선택지 버튼: 마우스 호버 효과 */
+        /* [PC용] 선택지 버튼에 마우스 올렸을 때 */
         @media (hover: hover) {
             .btn:not(.btn-continue):hover { 
                 background: #333 !important; 
@@ -99,15 +98,15 @@
             }
         }
 
-        /* [아이패드] 일반 선택지 버튼: 터치 시 반짝이는 효과 */
+        /* [아이패드용] 선택지 버튼 터치 시 즉각적인 반짝임 효과 */
+        /* :active 상태에서 배경과 글자색을 반전시킵니다. */
         .btn:not(.btn-continue):active {
-            background: #333 !important; /* 터치하는 순간 배경색 변경 */
-            color: #fff !important;      /* 터치하는 순간 글자색 변경 */
+            background: #333 !important;
+            color: #fff !important;
             -webkit-text-fill-color: #fff !important;
-            transition: background 0s, color 0s; /* 터치 시 즉각적인 반응 */
         }
 
-        /* Continue Quest 전용: 항상 검정 배경/흰 글씨 고정, 효과 없음 */
+        /* Continue Quest 버튼: 항상 검정 배경/흰 글씨로 고정 (터치 효과 없음) */
         .btn-continue {
             background: #333 !important;
             color: #fff !important;
@@ -116,12 +115,13 @@
             cursor: default;
         }
 
-        /* Continue Quest 버튼은 터치 시에도 아무 변화 없도록 설정 */
+        /* Continue Quest 버튼은 눌러도 색상 변화가 없도록 재설정 */
         .btn-continue:active {
             background: #333 !important;
             color: #fff !important;
             -webkit-text-fill-color: #fff !important;
         }
+
 
 
         .rank-wrapper { display: flex; align-items: flex-end; justify-content: center; gap: 8px; margin: 20px 0; }
@@ -140,7 +140,7 @@
         .stage-indicator { font-weight: 900; color: #aaa; font-size: 0.8rem; margin-bottom: 5px; text-transform: uppercase; }
     </style>
 </head>
-<body>
+<body ontouchstart="">
 
     <img src="jido.png" id="intro-image" alt="Intro Map">
 
@@ -159,7 +159,7 @@
     <div class="stage-indicator" id="story-stage-text">Stage 1</div>
     <div class="char-container"><img src="cha.png" alt="Character"></div>
     <div class="bubble" id="story-text"></div>
-    <button class="btn btn-continue" onclick="startQuizFromStory()">Continue Quest</button>
+<button class="btn btn-continue" onclick="startQuizFromStory()">Continue Quest</button>
 	</div>
 
     <div id="quiz-page" class="card hidden">
