@@ -8,18 +8,63 @@
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 
-        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-        body {
-            font-family: 'Pretendard', -apple-system, sans-serif;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100dvh; color: #333;
-            background-size: cover; background-position: center; background-repeat: no-repeat;
-            transition: background-image 1.2s ease-in-out; position: relative;
-        }
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: inherit; background-size: cover; background-position: center; z-index: -1;
-        }
+	html, body { 
+    margin: 0; 
+    padding: 0; 
+    width: 100%; 
+    height: 100%; 
+    /* 스크롤 방지 및 아이패드 튕김 현상 방지 */
+    overflow: hidden; 
+}
+
+body {
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    /* 정중앙 정렬 핵심 설정 */
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    width: 100%;
+    height: 100dvh; /* 주소창 제외한 실제 화면 높이 */
+    color: #333;
+    /* 배경 관련 설정 */
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    transition: background-image 1.2s ease-in-out; 
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 아이패드 배경 고정 버그 해결을 위한 가상 요소 */
+body::before {
+    content: ""; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: inherit; 
+    background-size: cover; 
+    background-position: center; 
+    z-index: -1;
+    /* iOS 하드웨어 가속 활성화 */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.card {
+    width: 92%; 
+    max-width: 500px; 
+    padding: 35px 20px; 
+    text-align: center;
+    background: rgba(255, 255, 255, 0.94); 
+    backdrop-filter: blur(10px);
+    border-radius: 30px; 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15); 
+    box-sizing: border-box; 
+    z-index: 20;
+    margin: 0; /* 불필요한 마진 제거 */
+}
 
         /* 인트로 지도 */
         #intro-image {
@@ -124,68 +169,105 @@
 
 
 
-        .rank-wrapper { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-end; 
-            margin: 30px 0; 
-            gap: 8px; 
-        }
-        .rank-box { 
-            flex: 1; 
-            text-align: center; 
-            border-radius: 15px; 
-            padding: 12px 5px; 
-            background: #fff; 
-            border: 2px solid transparent; 
-        }
-        .rank-badge { 
-            display: block; 
-            font-size: 0.7rem; 
-            font-weight: 800; 
-            margin-bottom: 4px; 
-            color: #999;
-        }
-        .rank-name { 
-            font-weight: 900; 
-            font-size: 0.9rem; 
-            word-wrap: break-word; 
-            line-height: 1.2; 
-            display: block; 
-            color: #333;
-        }
+/* 결과 카드 전체 레이아웃 개선 */
+#result-page {
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(15px);
+}
 
-        /* 1, 2, 3등 금/은/동 테두리 효과 */
-        .gold { 
-            transform: scale(1.1); 
-            border-color: #FFD700 !important; 
-            padding: 18px 5px; 
-            order: 2; 
-        }
-        .silver { border-color: #C0C0C0 !important; order: 1; }
-        .bronze { border-color: #CD7F32 !important; order: 3; }
+/* 1. 박스들을 감싸는 컨테이너: 높이를 제한해서 늘어남 방지 */
+.rank-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 박스들을 세로 중앙에 정렬 */
+    margin: 25px 0;
+    gap: 8px;
+    height: 100px; /* 컨테이너 높이 고정 */
+}
 
-        /* [상세 설명 섹션] */
-        .desc-area { 
-            text-align: left; 
-            margin-top: 25px; 
-            background: #fdfdfd; 
-            padding: 20px; 
-            border-radius: 20px; 
-            border: 1px solid #eee; 
-        }
-        .desc-area p { 
-            margin-bottom: 15px; 
-            font-size: 0.85rem; 
-            line-height: 1.5; 
-            color: #555; 
-        }
-        .desc-area p b { 
-            font-weight: 700; 
-            color: #333; 
-            display: block; 
-            margin-bottom: 2px; 
-        }
+/* 2. 개별 순위 박스: 높이를 딱 고정해서 짧게 만듦 */
+.rank-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 내부 텍스트 세로 중앙 정렬 */
+    align-items: center;
+    width: 28%;
+    height: 60px; /* ★ 이 숫자를 조절하면 박스 길이가 바뀝니다 ★ */
+    border-radius: 12px;
+    background: #fff;
+    border: 2px solid #eee;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+/* 3. 내부 글자들 간격 밀착 */
+.rank-badge {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    margin-bottom: 2px;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.rank-name {
+    font-weight: 900;
+    font-size: 1.2rem;
+    display: block;
+    color: #333;
+}
+
+/* 4. 순위별 색상 및 강조 (커지는 효과 최소화) */
+.gold {
+    height: 75px; /* 1위만 아주 살짝 길게 */
+    border-color: #FFD700 !important;
+    transform: scale(1.05);
+    z-index: 2;
+    order: 2;
+}
+.gold .rank-badge { background: #FFD700; color: #856404; }
+
+.silver {
+    border-color: #C0C0C0 !important;
+    order: 1;
+}
+.silver .rank-badge { background: #C0C0C0; color: #444; }
+
+.bronze {
+    border-color: #CD7F32 !important;
+    order: 3;
+}
+.bronze .rank-badge { background: #CD7F32; color: #fff; }
+
+/* 상세 설명 영역 */
+.desc-area {
+    text-align: left;
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+}
+
+.desc-item {
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.desc-item b {
+    font-weight: 800;
+    font-size: 1.05rem;
+    display: block;
+    margin-bottom: 3px;
+}
+
+/* 설명문 1,2,3위별 폰트 컬러 */
+#desc-list .desc-item:nth-child(1) b { color: #6C63FF !important; }
+#desc-list .desc-item:nth-child(2) b { color: #0070F3 !important; }
+#desc-list .desc-item:nth-child(3) b { color: #23D5AB !important; }
 
         .heart-gauge { display: flex; justify-content: center; gap: 4px; margin-top: 15px; font-size: 1.2rem; color: #eee; }
         .heart.fill { color: #e74c3c; }
@@ -232,46 +314,46 @@
     </div>
 
     <script>
-        const backgrounds = { stage1: "url('muindo.jpeg')", stage2: "url('samak.jpeg')", stage3: "url('jungle_bg.png')" };
+const backgrounds = { stage1: "url('muindo.jpeg')", stage2: "url('samak.jpeg')", stage3: "url('jungle.jpeg')" };
         const stageStories = {
-            1: "🏝️ Stage 1: The Deserted Island (Quest 1-5)",
-            2: "🏜️ Stage 2: The Hot Desert (Quest 6-10)",
-            3: "🌿 Stage 3: The Deep Jungle (Quest 11-15)"
+            1: "🏝️ Stage 1: The Island (Quest 1-5)",
+            2: "🏜️ Stage 2: The Desert (Quest 6-10)",
+            3: "🌿 Stage 3: The Jungle (Quest 11-15)"
         };
 
         const questions = [
             // Stage 1
-            { stage: 1, q: "\"First step on the beach! What’s the plan?\"", options: [{text: "Let's look for people and get help!", type: "Leader"}, {text: "I'll find a sharp stone to make a tool.", type: "Maker"}, {text: "I'll stay calm and think of a plan.", type: "Strategist"}]},
-            { stage: 1, q: "\"I'm so thirsty... How do we get water?\"", options: [{text: "I’ll climb that tree for coconuts!", type: "Athlete"}, {text: "I'll build a system to catch rain.", type: "Maker"}, {text: "I'll find a way to make the sea water drinkable.", type: "Strategist"}]},
-            { stage: 1, q: "\"Look! An old map in the sand. What do you think?\"", options: [{text: "I'll solve the hidden puzzles on it.", type: "Strategist"}, {text: "I wonder why this map was left here...", type: "Philosopher"}, {text: "Let me redraw it to show the island's shape!", type: "Artist"}]},
-            { stage: 1, q: "\"Something is moving in the bushes! What now?\"", options: [{text: "Grab a heavy stick! We need to defend ourselves.", type: "Maker"}, {text: "Quick! Let's run as fast as we can!", type: "Athlete"}, {text: "Don't move! Let's see what it is before we act.", type: "Leader"}]},
-            { stage: 1, q: "\"A plane! How do we show them we are here?\"", options: [{text: "I'll make a giant 'HELP' sign with shells.", type: "Artist"}, {text: "I'll start a big fire with lots of smoke.", type: "Maker"}, {text: "Everyone! Wave your clothes together!", type: "Leader"}]},
+            { stage: 1, q: "We woke up on a beach! First move?", options: [{text: "Everyone, follow me. Let’s make a plan.", type: "Commander"}, {text: "I'll search for stones or wood to make tools.", type: "Engineer"}, {text: "I'll scan the island and imagine the map.", type: "Artist"}]},
+            { stage: 1, q: "So thirsty... How to get water?", options: [{text: "I'll climb the tree and get coconuts.", type: "Athlete"}, {text: "I'll build a rain-catching system.", type: "Engineer"}, {text: "I'll find green plants. Water is near them.", type: "Explorer"}]},
+            { stage: 1, q: "An old map in the sand! What’s your take?", options: [{text: "I'll solve the hidden codes on it.", type: "Strategist"}, {text: "Who lived here? Let's find their traces.", type: "Explorer"}, {text: "I'll redraw it to make it look clearer.", type: "Artist"}]},
+            { stage: 1, q: "Shh! Something is moving in the bushes!", options: [{text: "I'll go first with a weapon. Stay back.", type: "Athlete"}, {text: "Wait. Let's analyze its movement pattern.", type: "Strategist"}, {text: "I'll use some food to bait it out.", type: "Engineer"}]},
+            { stage: 1, q: "A plane! How to send a signal?", options: [{text: "I'll make a giant 'HELP' sign to catch attention.", type: "Artist"}, {text: "I'll build a fire with thick black smoke.", type: "Engineer"}, {text: "Everyone! Wave your clothes together!", type: "Commander"}]},
             // Stage 2
-            { stage: 2, q: "\"It’s so hot... Can you help me with these water bags?\"", options: [{text: "No problem! Give the heaviest ones to me.", type: "Athlete"}, {text: "Let’s find the shortest route to save energy.", type: "Strategist"}, {text: "I’ll tie them together to carry them easily.", type: "Maker"}]},
-            { stage: 2, q: "\"The sun is melting me! How do we stay cool?\"", options: [{text: "That spot under the trees looks so much cooler!", type: "Artist"}, {text: "Let's take a break in the shade. Safety first!", type: "Leader"}, {text: "I'll only walk in the shadows of the rocks.", type: "Strategist"}]},
-            { stage: 2, q: "\"Whoa... a Pyramid! What's the first thing you notice?\"", options: [{text: "How did they build this without machines?", type: "Maker"}, {text: "It’s way more massive in person! The scale is unreal.", type: "Artist"}, {text: "What kind of secret symbols are on the walls?", type: "Philosopher"}]},
-            { stage: 2, q: "\"There's a traveler over there. Should we talk to him?\"", options: [{text: "Let's talk to him. He might help us out!", type: "Leader"}, {text: "Wait, stay back. He might be dangerous.", type: "Philosopher"}, {text: "I wonder how long he's been out here alone...", type: "Artist"}]},
-            { stage: 2, q: "\"The desert sky is so clear. What are you doing right now?\"", options: [{text: "I'll take a photo of these stars. Perfect shot!", type: "Artist"}, {text: "I'll use the stars to plan our route for tomorrow.", type: "Strategist"}, {text: "I'll just watch the stars and think about home.", type: "Philosopher"}]},
+            { stage: 2, q: "Heavy water bags to carry. Can you help?", options: [{text: "No problem. I'll carry the heaviest ones.", type: "Athlete"}, {text: "Let’s find the shortest route to save energy.", type: "Strategist"}, {text: "I’ll tie them to pull them like a sled.", type: "Engineer"}]},
+            { stage: 2, q: "It's melting hot! How to stay cool?", options: [{text: "I'll find a spot with a cool breeze.", type: "Artist"}, {text: "Let's rest in the shade. Safety first!", type: "Commander"}, {text: "I'll only walk in the shadows of the rocks.", type: "Strategist"}]},
+            { stage: 2, q: "Whoa, a Pyramid! What do you notice first?", options: [{text: "How did they build this without machines?", type: "Engineer"}, {text: "The scale is unreal. It’s like a giant art.", type: "Artist"}, {text: "I'll look for secret symbols on the walls.", type: "Strategist"}]},
+            { stage: 2, q: "A traveler is over there. Talk to him?", options: [{text: "I'll negotiate with him for our team.", type: "Commander"}, {text: "Wait. I'll watch his face to see if he's nice.", type: "Explorer"}, {text: "I'll use hand gestures to vibe with him.", type: "Artist"}]},
+            { stage: 2, q: "The traveler wants to give you a gift!", options: [{text: "A Flying Drone to see the whole map.", type: "Strategist"}, {text: "A Strong Tool-kit to fix anything.", type: "Engineer"}, {text: "A Zoom-Camera to see things far away.", type: "Artist"}]},
             // Stage 3
-            { stage: 3, q: "\"It's like a green maze. How do we move?\"", options: [{text: "I’ll lead the way and clear the path.", type: "Athlete"}, {text: "Check the compass. Stick to the heading.", type: "Strategist"}, {text: "I'll use the sun and moss for direction.", type: "Leader"}]},
-            { stage: 3, q: "\"Crap, a monkey swiped our bag! What's the move?\"", options: [{text: "I'll chase it and get our bag back!", type: "Athlete"}, {text: "Let's distract it with some fruit first.", type: "Leader"}, {text: "It’s just a bag. Let it go. Safety is more important.", type: "Philosopher"}]},
-            { stage: 3, q: "\"The villagers look suspicious. Now what?\"", options: [{text: "Hands up, walk slow. Show we’re friendly.", type: "Leader"}, {text: "Wait and watch. See how they react first.", type: "Philosopher"}, {text: "I'll use hand gestures and vibe with them.", type: "Artist"}]},
-            { stage: 3, q: "\"The villagers are having a festival! Your move?\"", options: [{text: "I’m hitting the center and dancing!", type: "Artist"}, {text: "I’ll just chill and listen to the music.", type: "Philosopher"}, {text: "I’ll help them with the heavy lifting or tasks.", type: "Athlete"}]},
-            { stage: 3, q: "\"We finally made it out! What was the best part?\"", options: [{text: "Our teamwork. We crushed it together!", type: "Leader"}, {text: "The views. That jungle was insane.", type: "Artist"}, {text: "That was a tough workout! I feel much stronger now.", type: "Athlete"}]}
+            { stage: 3, q: "It's a green maze. How to move?", options: [{text: "I’ll clear the path with my strength.", type: "Athlete"}, {text: "Check the compass. Stick to the heading.", type: "Strategist"}, {text: "I'll track the sun to find the way out.", type: "Explorer"}]},
+            { stage: 3, q: "A monkey took our bag! The plan?", options: [{text: "I'll chase it! I'm faster than a monkey.", type: "Athlete"}, {text: "Let's distract it with fruit.", type: "Strategist"}, {text: "Let it go. Team safety is more important.", type: "Commander"}]},
+            { stage: 3, q: "We found locals! They look suspicious.", options: [{text: "I'll go talk to their leader first.", type: "Commander"}, {text: "I'll watch and learn their culture first.", type: "Explorer"}, {text: "I'll show them our cool items.", type: "Artist"}]},
+            { stage: 3, q: "A local festival! What are you doing?", options: [{text: "I’ll enjoy their music and performance.", type: "Artist"}, {text: "I'll sit and learn their language.", type: "Explorer"}, {text: "I’ll help them set up the heavy stuff.", type: "Athlete"}]},
+            { stage: 3, q: "We escaped! What was your best skill?", options: [{text: "My ability to lead the whole team.", type: "Commander"}, {text: "My skill to build tools to survive.", type: "Engineer"}, {text: "My curiosity to adapt to a new world.", type: "Explorer"}]}
         ];
 
         let currentIdx = 0;
-        let scores = { "Leader": 0, "Maker": 0, "Strategist": 0, "Athlete": 0, "Philosopher": 0, "Artist": 0 };
+        let scores = { "Commander": 0, "Athlete": 0, "Strategist": 0, "Engineer": 0, "Artist": 0, "Explorer": 0 };
         let history = [];
         let currentStage = 0;
 
         const descs = {
-            "Leader": "Natural-born commander who inspires and unifies the team.",
-            "Strategist": "Sharp thinker who finds the most efficient path to success.",
-            "Athlete": "Powerhouse with endless energy and physical resilience.",
-            "Maker": "Skilled creator who can build anything from scratch.",
-            "Artist": "Creative visionary who finds beauty and expression everywhere.",
-            "Philosopher": "Deep thinker who explores the meaning and wisdom of life."
+            "Commander": "Interpersonal, Linguistic, and Teaching excellence.",
+            "Athlete": "Superior physical movement and kinetic intelligence.",
+            "Strategist": "Advanced logical reasoning and problem-solving skills.",
+            "Engineer": "Digital proficiency and technical construction ability.",
+            "Artist": "Exceptional musical and visual-spatial creativity.",
+            "Explorer": "Deep connection to nature, intrapersonal and spiritual wisdom."
         };
 
         function goToStory(stage) {
@@ -343,20 +425,40 @@
             }
         }
 
-        function showResult() {
-            document.getElementById('quiz-page').classList.add('hidden');
-            document.getElementById('result-page').classList.remove('hidden');
-            const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
-            const container = document.getElementById('rank-container');
-            container.innerHTML = `
-                <div class="rank-box silver"><span>2nd</span><b>${sorted[1][0]}</b></div>
-                <div class="rank-box gold"><span>1st</span><b>${sorted[0][0]}</b></div>
-                <div class="rank-box bronze"><span>3rd</span><b>${sorted[2][0]}</b></div>
-            `;
-            document.getElementById('desc-list').innerHTML = sorted.slice(0, 3).map((item, i) => `
-                <p><b>No.${i+1} ${item[0]}:</b> ${descs[item[0]] || "A unique and valuable talent discovered in the wild."}</p>
-            `).join('');
-        }
+function showResult() {
+    // 페이지 전환
+    document.getElementById('quiz-page').classList.add('hidden');
+    document.getElementById('result-page').classList.remove('hidden');
+    
+    // 점수 높은 순으로 정렬 (배열 형태)
+    const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    
+    // 1. 상단 순위 박스 렌더링 (디자인을 위해 2위-1위-3위 순서로 배치)
+    const container = document.getElementById('rank-container');
+    container.innerHTML = `
+        <div class="rank-box silver">
+            <span class="rank-badge">2nd</span>
+            <span class="rank-name">${sorted[1][0]}</span>
+        </div>
+        <div class="rank-box gold">
+            <span class="rank-badge">1st</span>
+            <span class="rank-name">${sorted[0][0]}</span>
+        </div>
+        <div class="rank-box bronze">
+            <span class="rank-badge">3rd</span>
+            <span class="rank-name">${sorted[2][0]}</span>
+        </div>
+    `;
+
+    // 2. 하단 상세 설명 리스트 렌더링 (순서대로 1, 2, 3위 표시)
+    const descList = document.getElementById('desc-list');
+    descList.innerHTML = sorted.slice(0, 3).map((item, i) => `
+        <div class="desc-item">
+            <b>Rank ${i + 1} - ${item[0]} Ability</b>
+            ${descs[item[0]] || "A unique and valuable talent discovered in the wild."}
+        </div>
+    `).join('');
+}
     </script>
 </body>
 </html>
