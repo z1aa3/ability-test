@@ -33,6 +33,8 @@ body {
     transition: background-image 1.2s ease-in-out; 
     position: relative;
     -webkit-tap-highlight-color: transparent;
+background-image: url('muindo.jpeg'); /* 인트로 전용 배경 파일명으로 변경하세요 */
+    background-color: #f4f4f4; /* 이미지 로딩 전 대비용 */
 }
 
 /* 아이패드 배경 고정 버그 해결을 위한 가상 요소 */
@@ -690,6 +692,28 @@ const charImg = document.querySelector('#result-page .char-container img');
     historyRecords.unshift({ date: new Date().toLocaleDateString(), ability: topAbility });
     localStorage.setItem('adventure_history', JSON.stringify(historyRecords.slice(0, 5)));
 }
+function showRecords() {
+    const modal = document.getElementById('record-modal');
+    const content = document.getElementById('record-content');
+    modal.classList.remove('hidden');
+
+    // 로컬스토리지에서 기록 가져오기
+    let historyRecords = JSON.parse(localStorage.getItem('adventure_history') || "[]");
+
+    if (historyRecords.length === 0) {
+        content.innerHTML = "<p style='text-align:center; color:#999;'>No records found yet.<br>Complete your first journey!</p>";
+    } else {
+        content.innerHTML = historyRecords.map((rec, index) => `
+            <div style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="font-weight:800; color:#333;">${rec.ability}</span>
+                    <br><span style="font-size:0.75rem; color:#aaa;">${rec.date}</span>
+                </div>
+                <div style="font-weight:900; color:#6C63FF;">#${index + 1}</div>
+            </div>
+        `).join('');
+    }
+}
 
 // 기록 창을 닫는 함수
 function closeRecords() {
@@ -770,7 +794,7 @@ function checkMatch(totalCards) {
         if (matchedCount >= totalCards) {
             setTimeout(() => {
                 if (currentMemoryLevel < 5) {
-                    if(confirm(`Level ${currentMemoryLevel} Level Cleared! Would you like to proceed to the next level?`)) {
+                    if(confirm(`Level ${currentMemoryLevel} Cleared! Would you like to proceed to the next level?`)) {
                         startMiniGame('memory', currentMemoryLevel + 1);
                     }
                 } else {
