@@ -572,17 +572,23 @@ const descs = {
         <b>🚀 Future Career Paths</b><br>#Nature #Reflection<br>Environmentalist | Psychologist | Counselor`
 };
 
-        function goToStory(stage) {
-            currentStage = stage;
-            document.getElementById('intro-image').classList.add('moved');
-            document.getElementById('intro-page').classList.add('hidden');
-            document.getElementById('quiz-page').classList.add('hidden');
-            const storyPage = document.getElementById('story-page');
-            storyPage.classList.remove('hidden');
-            document.body.style.backgroundImage = backgrounds[`stage${stage}`];
-            document.getElementById('story-stage-text').innerText = `Quest Stage ${stage}`;
-            document.getElementById('story-text').innerHTML = stageStories[stage];
-        }
+function goToStory(stage) {
+    currentStage = stage;
+    
+    // [수정된 부분] 지도를 아예 숨깁니다.
+    const introMap = document.getElementById('intro-image');
+    introMap.classList.add('hidden');
+    
+    document.getElementById('intro-page').classList.add('hidden');
+    document.getElementById('quiz-page').classList.add('hidden');
+    
+    const storyPage = document.getElementById('story-page');
+    storyPage.classList.remove('hidden');
+    
+    document.body.style.backgroundImage = backgrounds[`stage${stage}`];
+    document.getElementById('story-stage-text').innerText = `Quest Stage ${stage}`;
+    document.getElementById('story-text').innerHTML = stageStories[stage];
+}
 
         function startQuizFromStory() {
             document.getElementById('story-page').classList.add('hidden');
